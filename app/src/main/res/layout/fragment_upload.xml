@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout10"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/upload"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".UploadFragment">
+
+    <VideoView
+        android:id="@+id/video_view"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_margin="10dp" />
+
+    <EditText
+        android:id="@+id/video_name"
+        android:layout_width="400dp"
+        android:layout_height="42dp"
+        android:background="@drawable/login_bg"
+        android:drawableLeft="@drawable/ic_baseline_video_camera_front_24"
+        android:drawablePadding="12dp"
+        android:elevation="15dp"
+        android:fontFamily="sans-serif-light"
+        android:hint="Enter video name"
+        android:paddingLeft="20dp"
+        android:textColor="@color/white"
+        android:textColorHint="#D3D3D3"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/chooseBtn"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/teal_700"
+        android:text="Choose Video"
+        app:cornerRadius="25dp" />
+
+    <Button
+        android:id="@+id/uploadBtn"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/teal_700"
+        android:text="Upload Video"
+        app:cornerRadius="25dp" />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progUpload"
+        android:visibility="gone"/>
+
+</LinearLayout>

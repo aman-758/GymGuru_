@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "163972110868",
+    "project_id": "gymguru-c6e94",
+    "storage_bucket": "gymguru-c6e94.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:163972110868:android:a3150f870320b37d926501",
+        "android_client_info": {
+          "package_name": "com.example.gymguru"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "163972110868-gaibvgh1iob4odf6qqgf4tpnaopo5pop.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.gymguru",
+            "certificate_hash": "bce799aef715a2d19afc0c0aa2970015ad3b9bcb"
+          }
+        },
+        {
+          "client_id": "163972110868-777tiukp2luq54ofqiof08trnfhrk16j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCu4G1jeg_7B1mtEtCrbmauTtWWSB0eGRI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "163972110868-777tiukp2luq54ofqiof08trnfhrk16j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
