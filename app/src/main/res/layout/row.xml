@@ -46,7 +46,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/imageView6"
+                android:id="@+id/like_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -63,7 +63,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="4dp"
                 android:padding="8dp"
-                app:layout_constraintStart_toEndOf="@+id/imageView6"
+                app:layout_constraintStart_toEndOf="@+id/like_btn"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_baseline_thumb_down_off_alt_24" />
 
@@ -89,26 +89,17 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_baseline_playlist_add_24" />
 
-            <RatingBar
-                android:id="@+id/ratingBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textView16"
-                app:layout_constraintTop_toBottomOf="@+id/imageView10" />
-
             <TextView
                 android:id="@+id/textView15"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="13dp"
                 android:padding="8dp"
                 android:text="No Comments"
                 android:textSize="15sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
+                app:layout_constraintTop_toBottomOf="@+id/textRate" />
 
             <EditText
                 android:id="@+id/editTextTextPersonName"
@@ -148,25 +139,27 @@
                 app:srcCompat="@drawable/ic_baseline_send_24" />
 
             <TextView
-                android:id="@+id/textView16"
+                android:id="@+id/textRate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="19dp"
                 android:padding="8dp"
-                android:text="Ratings"
+                android:text="Rate Video"
+                android:textColor="@color/purple_700"
                 android:textSize="19sp"
-                app:layout_constraintBottom_toBottomOf="@+id/ratingBar"
-                app:layout_constraintEnd_toStartOf="@+id/ratingBar"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/ratingBar" />
+                app:layout_constraintTop_toBottomOf="@+id/textView21" />
 
             <TextView
-                android:id="@+id/textView20"
+                android:id="@+id/like_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="556"
-                app:layout_constraintEnd_toEndOf="@+id/imageView6"
-                app:layout_constraintStart_toStartOf="@+id/imageView6"
-                app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+                app:layout_constraintEnd_toEndOf="@+id/like_btn"
+                app:layout_constraintStart_toStartOf="@+id/like_btn"
+                app:layout_constraintTop_toBottomOf="@+id/like_btn" />
 
             <TextView
                 android:id="@+id/textView22"

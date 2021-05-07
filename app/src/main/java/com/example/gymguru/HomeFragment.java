@@ -1,27 +1,28 @@
 package com.example.gymguru;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.example.gymguru.databinding.FragmentHomeBinding;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding bind;
     FirebaseDatabase database;
     DatabaseReference reference;
-    
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,26 +38,35 @@ public class HomeFragment extends Fragment {
         bind.recyclerviewVideo.setHasFixedSize(true);
         bind.recyclerviewVideo.setLayoutManager(new LinearLayoutManager(getActivity()));
         database = FirebaseDatabase.getInstance();
-        reference = database.getReference("video");
+        reference = database.getReference("videos");
 
+    }
+    private void firebaseSearch(String searchtext){
+        String query = searchtext.toLowerCase();
+        Query firebaseQuery = database.getReference().orderByChild("search").startAt(query).endAt(query + "\uf8ff");
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        FirebaseRecyclerAdapter<HomeMember, VideoHolder>firebaseRecyclerAdapter =
-                new FirebaseRecyclerAdapter<HomeMember, VideoHolder>(
-                        HomeMember.class,
+        FirebaseRecyclerAdapter<UploadMember, VideoHolder> firebaseRecyclerAdapter =
+                new FirebaseRecyclerAdapter<UploadMember, VideoHolder>(
+                        UploadMember.class,
                         R.layout.row,
                         VideoHolder.class,
                         reference
+
                 ) {
+
                     @Override
-                    protected void populateViewHolder(VideoHolder viewHolder, HomeMember model, int position) {
-                        viewHolder.setVideo(requireActivity().getApplication(), model.getTitle(), model.getUrl());
+                    protected void populateViewHolder(VideoHolder videoHolder, UploadMember model, int position) {
+                        Log.d("Message",model.getUrl());
+                        videoHolder.setVideo(requireActivity().getApplication(), model, position);
+
                     }
                 };
         bind.recyclerviewVideo.setAdapter(firebaseRecyclerAdapter);
 
     }
+
 }

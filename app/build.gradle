@@ -54,9 +54,13 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-hls:2.10.8'
     implementation 'com.google.android.exoplayer:exoplayer-smoothstreaming:2.10.8'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.10.8'
+
     testImplementation 'junit:junit:4.13.2'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation platform('com.google.firebase:firebase-bom:27.0.0')
+    implementation 'com.github.wseemann:FFmpegMediaMetadataRetriever-core:1.0.15'
+    implementation 'com.github.wseemann:FFmpegMediaMetadataRetriever-native:1.0.15'
+    implementation 'com.github.hotchemi:android-rate:1.0.1'
 }

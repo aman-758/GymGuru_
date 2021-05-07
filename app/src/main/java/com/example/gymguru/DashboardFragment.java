@@ -1,20 +1,19 @@
 package com.example.gymguru;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import android.text.LoginFilter;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.example.gymguru.databinding.FragmentDashboardBinding;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 
 public class DashboardFragment extends Fragment {
@@ -31,11 +30,10 @@ public class DashboardFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable  Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         bind = FragmentDashboardBinding.bind(view);
-        if(auth.getCurrentUser() != null)
-        {
+        if (auth.getCurrentUser() != null) {
             bind.greet.setText(auth.getCurrentUser().getDisplayName());
             bind.cardLogout.setOnClickListener(v -> {
                 auth.signOut();
@@ -49,6 +47,24 @@ public class DashboardFragment extends Fragment {
             });
             bind.cardHome.setOnClickListener(v -> {
                 NavHostFragment.findNavController(DashboardFragment.this).navigate(R.id.action_dashboardFragment_to_homeFragment);
+            });
+            bind.cardExit.setOnClickListener(v -> {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Exit");
+                builder.setMessage("Do you want to exit?");
+                builder.setPositiveButton("Yes,Exit Now", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().finish();
+                    }
+                });
+                builder.setNegativeButton("Not now", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) { // dialog is the object of DialogInterface
+                        dialog.dismiss();
+                    }
+                });
+                builder.create().show();
             });
         }
     }

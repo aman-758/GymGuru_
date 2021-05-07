@@ -2,36 +2,35 @@ package com.example.gymguru;
 
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.MediaController;
-import android.widget.ProgressBar;
-import android.widget.Toast;
-import android.widget.VideoView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.example.gymguru.databinding.FragmentUploadBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.util.Objects;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -43,6 +42,7 @@ public class UploadFragment extends Fragment {
     MediaController mediaController;
     private StorageReference storageReference;
     private DatabaseReference databaseReference;
+    private long duration;
 
 
     @Override
@@ -91,6 +91,10 @@ public class UploadFragment extends Fragment {
         && data != null && data.getData() != null);
 
         videoUri = data.getData();
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(getActivity(),videoUri);
+         duration = Long.parseLong(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
+        retriever.release();
         bind.videoView.setVideoURI(videoUri);
 
     }
@@ -101,7 +105,13 @@ public class UploadFragment extends Fragment {
         // Now my extension's file is completed
     }
     private void Uploadvideo(){
+
         bind.progUpload.setVisibility(View.VISIBLE);
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Date currentTime = Calendar.getInstance().getTime();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+        String strDate = dateFormat. format(currentTime);
+
         if(videoUri != null){
             StorageReference reference = storageReference.child(System.currentTimeMillis()+
                     "."+getfileExt(videoUri));
@@ -110,11 +120,15 @@ public class UploadFragment extends Fragment {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     bind.progUpload.setVisibility(View.GONE);
-                    Snackbar.make(bind.getRoot(), "Upload successful",BaseTransientBottomBar.LENGTH_SHORT).show();
-                    UploadMember uploadMember = new UploadMember(bind.videoName.getText().toString().trim(),
-                            taskSnapshot.getUploadSessionUri().toString());
-                    String upload = databaseReference.push().getKey();
-                    databaseReference.child(upload).setValue(uploadMember);
+                    taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(uri -> {
+                        Snackbar.make(bind.getRoot(), "Upload successful",BaseTransientBottomBar.LENGTH_SHORT).show();
+                        UploadMember uploadMember = new UploadMember(bind.videoName.getText().toString().trim(),uri.toString(),uid,strDate,duration);
+                        String upload = databaseReference.push().getKey();
+                        databaseReference.child(upload).setValue(uploadMember);
+                    });
+
+
+
                 }
             })
                     .addOnFailureListener(new OnFailureListener() {

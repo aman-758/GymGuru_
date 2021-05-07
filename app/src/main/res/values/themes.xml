@@ -11,7 +11,12 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-
+        <item name = "android:windowAnimationStyle">@style/animation</item>
         <!-- Customize your theme here. -->
+    </style>
+
+    <style name = "animation">
+        <item name = "android:windowEnterAnimation">@android:anim/bounce_interpolator</item>
+        <item name = "android:windowExitAnimation">@android:anim/fade_out</item>
     </style>
 </resources>
