@@ -1,9 +1,10 @@
 <component name="libraryTable">
   <library name="Gradle: com.github.wseemann:FFmpegMediaMetadataRetriever-native:1.0.15@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/39fd9da1bfc6a258192af77a23923881/jetified-FFmpegMediaMetadataRetriever-native-1.0.15/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/39fd9da1bfc6a258192af77a23923881/jetified-FFmpegMediaMetadataRetriever-native-1.0.15/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/39fd9da1bfc6a258192af77a23923881/jetified-FFmpegMediaMetadataRetriever-native-1.0.15/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/cc97ada14e2b5c429cde6226b0568e5e/jetified-FFmpegMediaMetadataRetriever-native-1.0.15/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/cc97ada14e2b5c429cde6226b0568e5e/jetified-FFmpegMediaMetadataRetriever-native-1.0.15/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/cc97ada14e2b5c429cde6226b0568e5e/jetified-FFmpegMediaMetadataRetriever-native-1.0.15/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.wseemann/FFmpegMediaMetadataRetriever-native/1.0.15/1076c26d872c92b674b6993fa89339dbe511cbaf/FFmpegMediaMetadataRetriever-native-1.0.15-javadoc.jar!/" />

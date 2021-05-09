@@ -62,5 +62,6 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:27.0.0')
     implementation 'com.github.wseemann:FFmpegMediaMetadataRetriever-core:1.0.15'
     implementation 'com.github.wseemann:FFmpegMediaMetadataRetriever-native:1.0.15'
+    implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.github.hotchemi:android-rate:1.0.1'
 }

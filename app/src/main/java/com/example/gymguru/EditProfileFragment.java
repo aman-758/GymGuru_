@@ -25,10 +25,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class EditProfileFragment extends Fragment {
@@ -42,8 +41,7 @@ public class EditProfileFragment extends Fragment {
     private DatabaseReference reference;
     private String userId;
     private FragmentEditProfileBinding bind;
-    private CircleImageView Img;
-    private boolean isImageUpload = false;
+
     private Uri fullPhotoUri;
 
     @Override
@@ -51,8 +49,16 @@ public class EditProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         user = FirebaseAuth.getInstance().getCurrentUser();
+        fAuth = FirebaseAuth.getInstance();
         Storage = FirebaseStorage.getInstance();
         storageReference = Storage.getReference();
+
+
+        // I am doing this because every user have their own profile image.
+        StorageReference profileRef = storageReference.child("Users/"+fAuth.getCurrentUser().getUid()+"/Profiles");
+        profileRef.getDownloadUrl().addOnSuccessListener(uri -> {
+            Picasso.get().load(uri).into(bind.changeProfileImg);
+        });
         return inflater.inflate(R.layout.fragment_edit_profile, container, false);
 
     }
@@ -63,9 +69,30 @@ public class EditProfileFragment extends Fragment {
         if(requestCode == 1000){
             if(resultCode == Activity.RESULT_OK){
                 Uri imageUri = data.getData();
-                bind.changeProfileImg.setImageURI(imageUri);
+
+                //bind.changeProfileImg.setImageURI(imageUri);
+                uploadImageToFirebase(imageUri);
+
+
             }
         }
+    }
+
+    private void uploadImageToFirebase(Uri imageUri) {
+        // upload image to firebase storage
+       final StorageReference fileRef = storageReference.child("Users/"+fAuth.getCurrentUser().getUid()+"/Profiles");
+
+       fileRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
+            fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                Picasso.get().load(uri).into(bind.changeProfileImg);
+                Snackbar.make(bind.getRoot(),"Image uploaded successfully",BaseTransientBottomBar.LENGTH_LONG).show();
+                bind.progressBar.setVisibility(View.GONE);
+
+            });
+        }).addOnFailureListener(e -> {
+           Snackbar.make(bind.getRoot(),"Upload Failed",BaseTransientBottomBar.LENGTH_LONG).show();
+           bind.progressBar.setVisibility(View.GONE);
+        });
     }
 
     @Override
@@ -73,6 +100,7 @@ public class EditProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         bind = FragmentEditProfileBinding.bind(view);
         reference = FirebaseDatabase.getInstance().getReference("Users");
+        storageReference = FirebaseStorage.getInstance().getReference(); // this storage reference is to upload the image on firebase
         userId = user.getUid();
 
 
@@ -119,10 +147,11 @@ public class EditProfileFragment extends Fragment {
             bind.progressBar.setVisibility(View.VISIBLE);
         });
 
-        bind.changeProfileImg.setOnClickListener(v -> {
+        bind.addImg.setOnClickListener(v -> {
             // Here i am open to gallery
             Intent openGallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(openGallery, 1000);
+            bind.progressBar.setVisibility(View.VISIBLE);
         });
 
 
@@ -153,8 +182,6 @@ public class EditProfileFragment extends Fragment {
             }
             bind.progressBar.setVisibility(View.GONE);
         });
-
-
 
     }
 
