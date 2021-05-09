@@ -42,7 +42,7 @@
             android:layout_height="match_parent">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/dpImg2"
+                android:id="@+id/changeProfileImg"
                 android:layout_width="65dp"
                 android:layout_height="65dp"
                 android:layout_marginStart="8dp"
@@ -65,8 +65,8 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/textView11"
-                app:layout_constraintStart_toEndOf="@+id/dpImg2"
-                app:layout_constraintTop_toTopOf="@+id/dpImg2" />
+                app:layout_constraintStart_toEndOf="@+id/changeProfileImg"
+                app:layout_constraintTop_toTopOf="@+id/changeProfileImg" />
 
             <TextView
                 android:id="@+id/textView11"

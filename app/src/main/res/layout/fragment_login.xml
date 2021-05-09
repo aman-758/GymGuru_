@@ -68,7 +68,7 @@
                     android:layout_marginTop="30dp"
                     android:layout_marginEnd="40dp"
                     android:background="#11000000"
-                    android:drawableLeft="@drawable/ic_baseline_email_24"
+                    android:drawableLeft="@drawable/ic_baseline_email_reg"
                     android:drawablePadding="12dp"
                     android:ems="10"
                     android:hint="Enter Email"

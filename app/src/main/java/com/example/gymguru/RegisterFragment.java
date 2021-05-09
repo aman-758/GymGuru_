@@ -136,6 +136,7 @@ public class RegisterFragment extends Fragment {
                 bind.progReg.setVisibility(View.GONE);
             }).addOnFailureListener(e -> {
                 showError(e.getMessage());
+                bind.progReg.setVisibility(View.GONE);
             });
         }
 
