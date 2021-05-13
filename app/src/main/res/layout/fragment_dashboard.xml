@@ -25,23 +25,25 @@
 
     <TextView
         android:id="@+id/greet"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="20dp"
+        android:fontFamily="@font/aclonica"
         android:text="Dashboard"
         android:textAlignment="textStart"
         android:textColor="@color/black"
-        android:textSize="30sp"
+        android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/dpImg"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/gridLayout"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.gridlayout.widget.GridLayout
         android:id="@+id/gridLayout"
         android:layout_width="0dp"
-        android:layout_height="640dp"
+        android:layout_height="0dp"
         android:layout_margin="15dp"
         android:layout_marginStart="12dp"
         android:layout_marginTop="30dp"
@@ -133,6 +135,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardGallery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:cardCornerRadius="8dp"

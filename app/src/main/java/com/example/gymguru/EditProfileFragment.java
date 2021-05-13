@@ -32,9 +32,8 @@ import java.util.HashMap;
 
 public class EditProfileFragment extends Fragment {
 
-    private static final int REQUEST_IMAGE_GET = 78;
+
     private FirebaseAuth fAuth;
-    private FirebaseDatabase db;
     private FirebaseStorage Storage;
     StorageReference storageReference;
     private FirebaseUser user;
@@ -42,7 +41,6 @@ public class EditProfileFragment extends Fragment {
     private String userId;
     private FragmentEditProfileBinding bind;
 
-    private Uri fullPhotoUri;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,7 +53,7 @@ public class EditProfileFragment extends Fragment {
 
 
         // I am doing this because every user have their own profile image.
-        StorageReference profileRef = storageReference.child("Users/"+fAuth.getCurrentUser().getUid()+"/Profiles");
+        StorageReference profileRef = storageReference.child("Users/" + fAuth.getCurrentUser().getUid() + "/Profiles");
         profileRef.getDownloadUrl().addOnSuccessListener(uri -> {
             Picasso.get().load(uri).into(bind.changeProfileImg);
         });
@@ -64,10 +62,10 @@ public class EditProfileFragment extends Fragment {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable  Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1000){
-            if(resultCode == Activity.RESULT_OK){
+        if (requestCode == 1000) {
+            if (resultCode == Activity.RESULT_OK) {
                 Uri imageUri = data.getData();
 
                 //bind.changeProfileImg.setImageURI(imageUri);
@@ -80,18 +78,18 @@ public class EditProfileFragment extends Fragment {
 
     private void uploadImageToFirebase(Uri imageUri) {
         // upload image to firebase storage
-       final StorageReference fileRef = storageReference.child("Users/"+fAuth.getCurrentUser().getUid()+"/Profiles");
+        final StorageReference fileRef = storageReference.child("Users/" + fAuth.getCurrentUser().getUid() + "/Profiles");
 
-       fileRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
+        fileRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
             fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
                 Picasso.get().load(uri).into(bind.changeProfileImg);
-                Snackbar.make(bind.getRoot(),"Image uploaded successfully",BaseTransientBottomBar.LENGTH_LONG).show();
+                Snackbar.make(bind.getRoot(), "Image uploaded successfully", BaseTransientBottomBar.LENGTH_LONG).show();
                 bind.progressBar.setVisibility(View.GONE);
 
             });
         }).addOnFailureListener(e -> {
-           Snackbar.make(bind.getRoot(),"Upload Failed",BaseTransientBottomBar.LENGTH_LONG).show();
-           bind.progressBar.setVisibility(View.GONE);
+            Snackbar.make(bind.getRoot(), "Upload Failed", BaseTransientBottomBar.LENGTH_LONG).show();
+            bind.progressBar.setVisibility(View.GONE);
         });
     }
 
@@ -104,7 +102,7 @@ public class EditProfileFragment extends Fragment {
         userId = user.getUid();
 
 
-        // Now get users data from the database.
+        // Now get user's data from the database.
 
         reference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -124,7 +122,14 @@ public class EditProfileFragment extends Fragment {
                     bind.fireAge.setText(age);
                     bind.fireExperience.setText(experience);
                     bind.fireGender.setText(gender);
-                    bind.fireSwitch.setText(userType);
+                    if(userType.equals("Gym Trainer")){
+                        bind.fireSwitch.setChecked(true);
+                        bind.fireSwitch.setText(userType);
+                    }
+                    else{
+                        bind.fireSwitch.setChecked(false);
+                        bind.fireSwitch.setText(userType);
+                    }
 
                 }
 
@@ -140,13 +145,14 @@ public class EditProfileFragment extends Fragment {
         bind.btnSaveChanges.setOnClickListener(v -> {
             String name = bind.fireName.getText().toString();
             String experience = bind.fireExperience.getText().toString();
-
+            Boolean userType = bind.fireSwitch.getShowText();
             String age = bind.fireAge.getText().toString();
 
-            updateData(name,experience,age);
+            updateData(name, experience, age, userType);
             bind.progressBar.setVisibility(View.VISIBLE);
         });
 
+        // This is the add profile segment
         bind.addImg.setOnClickListener(v -> {
             // Here i am open to gallery
             Intent openGallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -154,33 +160,33 @@ public class EditProfileFragment extends Fragment {
             bind.progressBar.setVisibility(View.VISIBLE);
         });
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     }
-
-    private void updateData(String name, String experience, String age) {
+    //This is the function of update user's data
+    private void updateData(String name, String experience, String age, Boolean userType) {
         // Now creating hashmap to update the data
         HashMap User = new HashMap();
-        User.put("username",name);
-        User.put("experience",experience);
-
-        User.put("age",age);
+        User.put("username", name);
+        User.put("experience", experience);
+        User.put("age", age);
+        User.put("UserType",userType);
 
         reference = FirebaseDatabase.getInstance().getReference("Users");
         // Now update the child of the Users
         reference.child(userId).updateChildren(User).addOnCompleteListener(task -> {
-            if(task.isSuccessful()){
+            if (task.isSuccessful()) {
 
                 bind.fireName.setText(name);
                 bind.fireExperience.setText(experience);
-
                 bind.fireAge.setText(age);
-                Snackbar.make(bind.getRoot(),"Data successfully updated",BaseTransientBottomBar.LENGTH_LONG).show();
+                Snackbar.make(bind.getRoot(), "Data successfully updated", BaseTransientBottomBar.LENGTH_LONG).show();
                 bind.progressBar.setVisibility(View.GONE);
-            } else{
-                Snackbar.make(bind.getRoot(),"Failed to update",BaseTransientBottomBar.LENGTH_LONG).show();
+            } else {
+                Snackbar.make(bind.getRoot(), "Failed to update", BaseTransientBottomBar.LENGTH_LONG).show();
                 bind.progressBar.setVisibility(View.GONE);
             }
-            bind.progressBar.setVisibility(View.GONE);
+
         });
 
     }

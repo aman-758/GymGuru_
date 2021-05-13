@@ -15,7 +15,6 @@ import com.example.gymguru.databinding.FragmentHomeBinding;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 
 
 public class HomeFragment extends Fragment {
@@ -41,10 +40,12 @@ public class HomeFragment extends Fragment {
         reference = database.getReference("videos");
 
     }
-    private void firebaseSearch(String searchtext){
+
+    //This is for search text
+    /*private void firebaseSearch(String searchtext){
         String query = searchtext.toLowerCase();
         Query firebaseQuery = database.getReference().orderByChild("search").startAt(query).endAt(query + "\uf8ff");
-    }
+    }*/
 
     @Override
     public void onStart() {
@@ -60,8 +61,11 @@ public class HomeFragment extends Fragment {
 
                     @Override
                     protected void populateViewHolder(VideoHolder videoHolder, UploadMember model, int position) {
+
                         Log.d("Message",model.getUrl());
                         videoHolder.setVideo(requireActivity().getApplication(), model, position);
+                        String videoId = this.getRef(position).getKey();
+                        videoHolder.initui(requireActivity().getApplication(), model, position,videoId);
 
                     }
                 };

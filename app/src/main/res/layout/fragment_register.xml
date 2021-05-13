@@ -10,7 +10,7 @@
 
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="135dp"
         android:src="@drawable/logo"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,11 +37,11 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="50dp">
+                android:layout_marginBottom="10dp">
 
                 <TextView
                     android:id="@+id/textView"
-                    android:layout_width="300dp"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="10dp"
@@ -58,9 +58,11 @@
 
                 <EditText
                     android:id="@+id/editName"
-                    android:layout_width="350dp"
+                    android:layout_width="0dp"
                     android:layout_height="40dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="20dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_marginBottom="20dp"
                     android:background="#11000000"
                     android:drawableLeft="@drawable/ic_baseline_person_reg"
@@ -76,9 +78,11 @@
 
                 <EditText
                     android:id="@+id/editAge"
-                    android:layout_width="350dp"
+                    android:layout_width="0dp"
                     android:layout_height="40dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="20dp"
+                    android:layout_marginEnd="10dp"
                     android:background="#11000000"
                     android:drawableLeft="@drawable/ic_baseline_person_reg"
                     android:drawablePadding="12dp"
@@ -92,9 +96,11 @@
 
                 <EditText
                     android:id="@+id/editUemail"
-                    android:layout_width="350dp"
+                    android:layout_width="0dp"
                     android:layout_height="40dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="20dp"
+                    android:layout_marginEnd="10dp"
                     android:background="#11000000"
                     android:drawableLeft="@drawable/ic_baseline_email_reg"
                     android:drawablePadding="12dp"
@@ -108,14 +114,16 @@
 
                 <EditText
                     android:id="@+id/editExperience"
-                    android:layout_width="350dp"
+                    android:layout_width="0dp"
                     android:layout_height="40dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="20dp"
+                    android:layout_marginEnd="10dp"
                     android:background="#11000000"
                     android:drawableLeft="@drawable/ic_baseline_edit_reg"
                     android:drawablePadding="12dp"
                     android:ems="10"
-                    android:hint="Write your experience"
+                    android:hint="Write your profession"
                     android:inputType="textPersonName"
                     android:textColor="@color/white"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -123,10 +131,30 @@
                     app:layout_constraintTop_toBottomOf="@+id/editUemail" />
 
                 <EditText
-                    android:id="@+id/editUpass"
-                    android:layout_width="350dp"
+                    android:id="@+id/channelName"
+                    android:layout_width="0dp"
                     android:layout_height="40dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="#11000000"
+                    android:drawableLeft="@drawable/ic_baseline_video_stable_24"
+                    android:drawablePadding="12dp"
+                    android:ems="10"
+                    android:hint="Channel Name(for trainers only)"
+                    android:inputType="textPersonName"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/editExperience" />
+
+                <EditText
+                    android:id="@+id/editUpass"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="10dp"
                     android:background="#11000000"
                     android:drawableLeft="@drawable/ic_baseline_lock_24"
                     android:drawablePadding="12dp"
@@ -136,13 +164,15 @@
                     android:textColor="@color/white"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editExperience" />
+                    app:layout_constraintTop_toBottomOf="@+id/channelName" />
 
                 <EditText
                     android:id="@+id/cPass"
-                    android:layout_width="350dp"
+                    android:layout_width="0dp"
                     android:layout_height="40dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="20dp"
+                    android:layout_marginEnd="10dp"
                     android:background="#11000000"
                     android:drawableLeft="@drawable/ic_baseline_lock_24"
                     android:drawablePadding="12dp"
@@ -156,11 +186,11 @@
 
                 <Switch
                     android:id="@+id/userSwch"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="20dp"
-                    android:layout_marginEnd="12dp"
+                    android:layout_marginEnd="210dp"
                     android:background="#11000000"
                     android:padding="8dp"
                     android:text="Gym Trainer "

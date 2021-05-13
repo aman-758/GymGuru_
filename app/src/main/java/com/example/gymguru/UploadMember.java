@@ -8,6 +8,8 @@ public class UploadMember {
     public String title;
     public String url;
 
+
+
     public long getDuration() {
         return duration;
     }
@@ -24,8 +26,6 @@ public class UploadMember {
         this.uploaderId = uploaderId;
     }
 
-
-
     public String getDate() {
         return date;
     }
@@ -41,6 +41,7 @@ public class UploadMember {
     public void setTitle(String title) {
         this.title = title;
     }
+
 
     public String getUrl() {
         return url;

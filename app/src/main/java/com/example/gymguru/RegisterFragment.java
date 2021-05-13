@@ -46,6 +46,7 @@ public class RegisterFragment extends Fragment {
             String cPass = bind.cPass.getText().toString();
             String age = bind.editAge.getText().toString();
             String experience = bind.editExperience.getText().toString();
+            String channelName = bind.channelName.getText().toString();
             String genderType = "";
             String userType = "Viewer";
             bind.progReg.setVisibility(View.VISIBLE);
@@ -57,11 +58,13 @@ public class RegisterFragment extends Fragment {
             }
             if(bind.userSwch.isChecked()){
                 userType = "Gym Trainer";
+
             }
             if (!username.trim().isEmpty()) {
-                if (!age.trim().isEmpty()) {
+                if (!age.trim().isEmpty()&&age.length()<=2) {
                     if (email.length() >= 10) {
                         if (!experience.trim().isEmpty()) {
+                            if(!channelName.isEmpty()){
                             if (password.length() >= 8) {
                                 if (cPass.equals(password)) {
 
@@ -70,7 +73,7 @@ public class RegisterFragment extends Fragment {
                                     auth.createUserWithEmailAndPassword(email, password)
                                             .addOnSuccessListener(authResult -> {
                                                 String uid = authResult.getUser().getUid();
-                                                RegistrationModel registrationModel = new RegistrationModel(uid, username, age, email, experience, finalGenderType, finalUserType);
+                                                RegistrationModel registrationModel = new RegistrationModel(uid, username, age, email, experience, channelName, finalGenderType, finalUserType);
 
                                                 //FirebaseUser user = authResult.getUser();
                                                 UserProfileChangeRequest req = new UserProfileChangeRequest.Builder().setDisplayName(username).build();
@@ -87,20 +90,26 @@ public class RegisterFragment extends Fragment {
                                     updateUserProfile(null);
                                     bind.progReg.setVisibility(View.GONE);
                                 }
-                            } else {
+                            } else{
                                 bind.editUpass.setError("Invalid Password!");
                                 bind.editUpass.requestFocus();
                                 updateUserProfile(null);
                                 bind.progReg.setVisibility(View.GONE);
                             }
+                            } else {
+                                bind.channelName.setError("Channel Name must be provided!");
+                                bind.channelName.requestFocus();
+                                updateUserProfile(null);
+                                bind.progReg.setVisibility(View.GONE);
+                            }
                         } else {
-                            bind.editExperience.setError("Experience must be provided!");
+                            bind.editExperience.setError("Profession must be provided!");
                             bind.editExperience.requestFocus();
                             updateUserProfile(null);
                             bind.progReg.setVisibility(View.GONE);
                         }
                     } else{
-                        bind.editUemail.setText("Invalid Email!");
+                        bind.editUemail.setError("Invalid Email!");
                         bind.editUemail.requestFocus();
                         updateUserProfile(null);
                         bind.progReg.setVisibility(View.GONE);

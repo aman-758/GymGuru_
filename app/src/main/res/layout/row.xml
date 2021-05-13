@@ -57,7 +57,7 @@
                 app:srcCompat="@drawable/ic_baseline_favorite_border_24" />
 
             <ImageView
-                android:id="@+id/imageView10"
+                android:id="@+id/btnDislike"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -68,13 +68,13 @@
                 app:srcCompat="@drawable/ic_baseline_thumb_down_off_alt_24" />
 
             <ImageView
-                android:id="@+id/imageView14"
+                android:id="@+id/FollowUser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="4dp"
                 android:padding="8dp"
-                app:layout_constraintStart_toEndOf="@+id/imageView10"
+                app:layout_constraintStart_toEndOf="@+id/btnDislike"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_outline_person_add_alt_1_24" />
 
@@ -103,7 +103,7 @@
 
             <EditText
                 android:id="@+id/editTextTextPersonName"
-                android:layout_width="270dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="20dp"
@@ -166,18 +166,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="200"
-                app:layout_constraintEnd_toEndOf="@+id/imageView10"
-                app:layout_constraintStart_toStartOf="@+id/imageView10"
-                app:layout_constraintTop_toBottomOf="@+id/imageView10" />
+                app:layout_constraintEnd_toEndOf="@+id/btnDislike"
+                app:layout_constraintStart_toStartOf="@+id/btnDislike"
+                app:layout_constraintTop_toBottomOf="@+id/btnDislike" />
 
             <TextView
                 android:id="@+id/textView23"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Follow"
-                app:layout_constraintEnd_toEndOf="@+id/imageView14"
-                app:layout_constraintStart_toStartOf="@+id/imageView14"
-                app:layout_constraintTop_toBottomOf="@+id/imageView14" />
+                app:layout_constraintEnd_toEndOf="@+id/FollowUser"
+                app:layout_constraintStart_toStartOf="@+id/FollowUser"
+                app:layout_constraintTop_toBottomOf="@+id/FollowUser" />
 
             <TextView
                 android:id="@+id/textView24"
@@ -189,13 +189,13 @@
                 app:layout_constraintTop_toBottomOf="@+id/imageView15" />
 
             <ImageView
-                android:id="@+id/imageView17"
+                android:id="@+id/btnDownload"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="4dp"
                 android:padding="8dp"
-                app:layout_constraintStart_toEndOf="@+id/imageView14"
+                app:layout_constraintStart_toEndOf="@+id/FollowUser"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_baseline_download_24" />
 
@@ -204,9 +204,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Download"
-                app:layout_constraintEnd_toEndOf="@+id/imageView17"
-                app:layout_constraintStart_toStartOf="@+id/imageView17"
-                app:layout_constraintTop_toBottomOf="@+id/imageView17" />
+                app:layout_constraintEnd_toEndOf="@+id/btnDownload"
+                app:layout_constraintStart_toStartOf="@+id/btnDownload"
+                app:layout_constraintTop_toBottomOf="@+id/btnDownload" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

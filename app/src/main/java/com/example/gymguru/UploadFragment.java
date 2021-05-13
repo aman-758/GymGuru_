@@ -44,7 +44,6 @@ public class UploadFragment extends Fragment {
     private DatabaseReference databaseReference;
     private long duration;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

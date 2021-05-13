@@ -10,7 +10,7 @@
 
     <ImageView
         android:id="@+id/imageView4"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="150dp"
         android:layout_marginTop="64dp"
         android:src="@drawable/forgot"
@@ -42,7 +42,7 @@
         android:layout_marginTop="30dp"
         android:layout_marginEnd="30dp"
         android:background="#11000000"
-        android:drawableLeft="@drawable/ic_baseline_email_24"
+        android:drawableLeft="@drawable/ic_baseline_email_reg"
         android:drawablePadding="12dp"
         android:ems="10"
         android:hint="Enter Email"
@@ -55,9 +55,11 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardForgot"
-        android:layout_width="200dp"
+        android:layout_width="0dp"
         android:layout_height="50dp"
+        android:layout_marginStart="70dp"
         android:layout_marginTop="35dp"
+        android:layout_marginEnd="70dp"
         app:cardBackgroundColor="#ff5c8d"
         app:cardCornerRadius="25dp"
         app:layout_constraintEnd_toEndOf="parent"
