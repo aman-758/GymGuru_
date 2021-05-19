@@ -12,33 +12,29 @@
         android:id="@+id/dpImg"
         android:layout_width="65dp"
         android:layout_height="65dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
         android:src="@drawable/dash_profile"
         app:civ_border_color="#DFDADA"
         app:civ_border_width="2dp"
-        app:layout_constraintBottom_toTopOf="@+id/gridLayout"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/gridLayout"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.222"
         tools:src="@drawable/dash_profile" />
 
     <TextView
         android:id="@+id/greet"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginStart="16dp"
         android:fontFamily="@font/aclonica"
         android:text="Dashboard"
         android:textAlignment="textStart"
         android:textColor="@color/black"
         android:textSize="25sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/dpImg"
-        app:layout_constraintStart_toStartOf="@+id/gridLayout"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@+id/dpImg"
+        app:layout_constraintStart_toEndOf="@+id/dpImg"
+        app:layout_constraintTop_toTopOf="@+id/dpImg" />
 
     <androidx.gridlayout.widget.GridLayout
         android:id="@+id/gridLayout"
@@ -96,6 +92,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardChat"
             android:layout_width="125dp"
             android:layout_height="wrap_content"
             app:cardCornerRadius="8dp"

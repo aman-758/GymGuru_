@@ -24,28 +24,45 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/textView12"
+            android:id="@+id/textTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="12dp"
             android:paddingBottom="5dp"
-            android:text="time ago" />
+            android:text="time ago"
+            android:textSize="12sp" />
 
-        <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+        <com.google.android.exoplayer2.ui.PlayerView
             android:id="@+id/exoplayer_view"
             android:layout_width="match_parent"
             android:layout_height="220dp"
             android:layout_gravity="center"
             android:background="@color/black"
-            app:resize_mode="fill">
+            app:hide_on_touch="true"
+            app:show_timeout="5000"
+            app:rewind_increment="10000"
+            app:fastforward_increment="10000"
+            app:use_controller="true"
+            app:player_layout_id="@layout/exo_simple_player_view"
+            app:controller_layout_id="@layout/custom_controller"
+            app:resize_mode="fit">
 
-        </com.google.android.exoplayer2.ui.SimpleExoPlayerView>
+            <ProgressBar
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/progress_bar"
+                android:layout_gravity="center"/>
+
+        </com.google.android.exoplayer2.ui.PlayerView>
+
+
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/like_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -56,7 +73,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_baseline_favorite_border_24" />
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/btnDislike"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -67,8 +84,8 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_baseline_thumb_down_off_alt_24" />
 
-            <ImageView
-                android:id="@+id/FollowUser"
+            <ImageButton
+                android:id="@+id/btnFollow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -94,15 +111,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:layout_marginTop="13dp"
+                android:layout_marginTop="10dp"
                 android:padding="8dp"
                 android:text="No Comments"
                 android:textSize="15sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textRate" />
+                app:layout_constraintTop_toBottomOf="@+id/ratingBtn" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName"
+                android:id="@+id/editComment"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -116,15 +133,18 @@
                 app:layout_constraintStart_toEndOf="@+id/imageView7"
                 app:layout_constraintTop_toBottomOf="@+id/textView15" />
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imageView7"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="4dp"
-                app:layout_constraintBottom_toBottomOf="@+id/editTextTextPersonName"
-                app:layout_constraintEnd_toStartOf="@+id/editTextTextPersonName"
+                app:civ_border_color="#DFDADA"
+                android:src="@drawable/dash_profile"
+                app:civ_border_width="2dp"
+                app:layout_constraintBottom_toBottomOf="@+id/editComment"
+                app:layout_constraintEnd_toStartOf="@+id/editComment"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/editTextTextPersonName"
+                app:layout_constraintTop_toTopOf="@+id/editComment"
                 app:srcCompat="@drawable/dash_profile" />
 
             <ImageView
@@ -132,25 +152,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                app:layout_constraintBottom_toBottomOf="@+id/editTextTextPersonName"
+                app:layout_constraintBottom_toBottomOf="@+id/editComment"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/editTextTextPersonName"
-                app:layout_constraintTop_toTopOf="@+id/editTextTextPersonName"
+                app:layout_constraintStart_toEndOf="@+id/editComment"
+                app:layout_constraintTop_toTopOf="@+id/editComment"
                 app:srcCompat="@drawable/ic_baseline_send_24" />
-
-            <TextView
-                android:id="@+id/textRate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="19dp"
-                android:padding="8dp"
-                android:text="Rate Video"
-                android:textColor="@color/purple_700"
-                android:textSize="19sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView21" />
 
             <TextView
                 android:id="@+id/like_text"
@@ -162,7 +168,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/like_btn" />
 
             <TextView
-                android:id="@+id/textView22"
+                android:id="@+id/dislikeText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="200"
@@ -171,13 +177,13 @@
                 app:layout_constraintTop_toBottomOf="@+id/btnDislike" />
 
             <TextView
-                android:id="@+id/textView23"
+                android:id="@+id/followText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Follow"
-                app:layout_constraintEnd_toEndOf="@+id/FollowUser"
-                app:layout_constraintStart_toStartOf="@+id/FollowUser"
-                app:layout_constraintTop_toBottomOf="@+id/FollowUser" />
+                app:layout_constraintEnd_toEndOf="@+id/btnFollow"
+                app:layout_constraintStart_toStartOf="@+id/btnFollow"
+                app:layout_constraintTop_toBottomOf="@+id/btnFollow" />
 
             <TextView
                 android:id="@+id/textView24"
@@ -193,10 +199,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:layout_marginTop="4dp"
                 android:padding="8dp"
-                app:layout_constraintStart_toEndOf="@+id/FollowUser"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/btnFollow"
+                app:layout_constraintTop_toTopOf="@+id/like_btn"
                 app:srcCompat="@drawable/ic_baseline_download_24" />
 
             <TextView
@@ -207,6 +212,57 @@
                 app:layout_constraintEnd_toEndOf="@+id/btnDownload"
                 app:layout_constraintStart_toStartOf="@+id/btnDownload"
                 app:layout_constraintTop_toBottomOf="@+id/btnDownload" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageView6"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/dash_profile"
+                app:civ_border_color="#DFDADA"
+                app:civ_border_width="2dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/like_text"
+                app:srcCompat="@drawable/dash_profile" />
+
+            <TextView
+                android:id="@+id/channelName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:padding="2dp"
+                android:text="Channel Name"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView6"
+                app:layout_constraintStart_toEndOf="@+id/imageView6"
+                app:layout_constraintTop_toTopOf="@+id/imageView6" />
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:padding="3dp"
+                android:text="No. follow"
+                app:layout_constraintBottom_toBottomOf="@+id/channelName"
+                app:layout_constraintStart_toEndOf="@+id/channelName"
+                app:layout_constraintTop_toTopOf="@+id/channelName" />
+
+            <Button
+                android:id="@+id/ratingBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="80dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="80dp"
+                android:backgroundTint="#E6F3DD0E"
+                android:text="Ratings"
+                app:cornerRadius="25dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/channelName" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

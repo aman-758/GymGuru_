@@ -81,7 +81,12 @@ public class LoginFragment extends Fragment {
     }
 
     public void onStart(){
+
         super.onStart();
-        updateUI(auth.getCurrentUser());
+        // logic dhakke nikal ke bahr nikalne ka
+        if(auth.getCurrentUser()!=null) {
+            updateUI(auth.getCurrentUser());
+        }else {
+        }
     }
 }

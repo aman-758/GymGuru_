@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class GalleryFragment extends Fragment {
     private FragmentGalleryBinding bind;
     FirebaseDatabase database;
-    DatabaseReference reference;
+
     private FirebaseAuth mAuth;
     private DatabaseReference users,followers;
     ArrayList<RegistrationModel> trainerList,followList;
@@ -47,8 +47,14 @@ public class GalleryFragment extends Fragment {
         bind = FragmentGalleryBinding.bind(view);
         bind.recyclerViewImg.setHasFixedSize(true);
         bind.recyclerViewImg.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        /*FirebaseRecyclerOptions<RegistrationModel,FollowModel> options =
+                new FirebaseRecyclerOptions.Builder<RegistrationModel,FollowModel>()
+                        .setQuery(FirebaseDatabase.getInstance().getReference().child("Users"), RegistrationModel.class,FollowModel.class)
+                        .build();*/
+
         database = FirebaseDatabase.getInstance();
-        reference = database.getReference("Trainer_Gallery");
+
         trainerList = new ArrayList<>();
         users.get().addOnSuccessListener(dataSnapshot -> {
             for (DataSnapshot child : dataSnapshot.getChildren()) {
@@ -60,35 +66,41 @@ public class GalleryFragment extends Fragment {
         }).addOnFailureListener(e -> {
             Snackbar.make(bind.getRoot(),e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
         });
-        followList = new ArrayList<>();
-        users.get().addOnSuccessListener(dataSnapshot -> {
+
+        /*followList = new ArrayList<>();
+        followers.get().addOnSuccessListener(dataSnapshot -> {
                 for(DataSnapshot child : dataSnapshot.getChildren()){
-                    RegistrationModel registrationModel = child.getValue(RegistrationModel.class);
-                    if(registrationModel.userType.equals("Viewer")){
+                    FollowModel followModel = child.getValue(FollowModel.class);
+                    if(.userType.equals("Viewer")){
                         followList.add(registrationModel);
                     }
                 }
         }).addOnFailureListener(e -> {
            Snackbar.make(bind.getRoot(),e.getMessage(),BaseTransientBottomBar.LENGTH_LONG).show();
 
-        });
+        });*/
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        FirebaseRecyclerAdapter<RegistrationModel, GalleryAdapter> firebaseRecyclerAdapter
-                = new FirebaseRecyclerAdapter<RegistrationModel, GalleryAdapter>(
+        FirebaseRecyclerAdapter<RegistrationModel, GalleryHolder> firebaseRecyclerAdapter
+                = new FirebaseRecyclerAdapter<RegistrationModel, GalleryHolder>(
                         RegistrationModel.class,
                         R.layout.row_gallery,
-                        GalleryAdapter.class,
-                        reference
+                        GalleryHolder.class,
+                        users
         )
 
         {
+
             @Override
-            protected void populateViewHolder(GalleryAdapter galleryAdapter, RegistrationModel model, int i) {
-                //galleryAdapter.getTrainer();
+            protected void populateViewHolder(GalleryHolder holder, RegistrationModel registrationModel, int i) {
+                if(registrationModel.getUserType().equals("Gym Trainer")) {
+
+
+                    holder.setTrainer(getActivity(), registrationModel, i);
+                }
             }
         };
         bind.recyclerViewImg.setAdapter(firebaseRecyclerAdapter);

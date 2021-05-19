@@ -1,22 +1,32 @@
 package com.example.gymguru;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.Player.EventListener;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.extractor.ExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
@@ -31,70 +41,53 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
 public class VideoHolder extends RecyclerView.ViewHolder {
     private static final int PERMISSION_STORAGE_CODE = 1000;
     View mView;
+    Button rating;
+    TextView timeText,channelName;
+    PlayerView playerView;
+    ProgressBar progressBar;
+    ImageView btFullScreen;
+    boolean flag = false;
     SimpleExoPlayer exoPlayer;
     private PlayerView mExoplayerView;
-    private ImageView like,dislike,follow,download,save;
-
+    ImageButton likeButton, dislikeButton, followButton;
+    private ImageView download,comment,save;
+    TextView likesdisplay, dislikesdisplay, followsdisplay;
+    DatabaseReference likesref, dislikeref, followsref;
+    int likesCount, dislikesCount, followCount;
     public VideoHolder( View itemView) {
         super(itemView);
         mView = itemView;
+
     }
 
     // This is the function where i control all the function of row.xml
 
-    public void initui(final Application ctx, UploadMember model, int position, String videoId){
+    public void initui(Context ctx, UploadMember model, /*RegistrationModel registrationModel,*/ int position, String videoId, FragmentManager fm){
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        //Like function(incomplete)
-        like = mView.findViewById(R.id.like_btn);
-        like.setOnClickListener(v -> {
-
-            FirebaseDatabase.getInstance().getReference("video_likes").child(videoId).setValue
-                    (new VideoLike(uid,"like"),(error, ref) -> {
-                       if(error != null){
-                           Snackbar.make(mView,"Error", BaseTransientBottomBar.LENGTH_LONG).show();
-                       }else{
-                           //replace color of like button
-                           Snackbar.make(mView,"Added to Liked videos",BaseTransientBottomBar.LENGTH_LONG).show();
-                       }
-                    });
+        //Rating System
+        rating = mView.findViewById(R.id.ratingBtn);
+        rating.setOnClickListener(v ->  {
+             new RatingFragment().show(fm,"Rating");
         });
 
-        //Dislike function(incomplete)
-        dislike = mView.findViewById(R.id.btnDislike);
-        dislike.setOnClickListener(v -> {
-            FirebaseDatabase.getInstance().getReference("video_dislikes").child(videoId).setValue
-                    (new VideoDislike(uid,"Dislike"),(error, ref) -> {
-                       if(error!= null){
-                           Snackbar.make(mView,"Error",BaseTransientBottomBar.LENGTH_LONG).show();
-                       }else{
-                            Snackbar.make(mView,"You Disliked this video",BaseTransientBottomBar.LENGTH_LONG).show();
-                       }
-                    });
-        });
-
-        //Follow function(incomplete)
-        follow = mView.findViewById(R.id.FollowUser);
-        follow.setOnClickListener(v -> {
-
-              FirebaseDatabase.getInstance().getReference("Followers").child(model.uploaderId).
-                    setValue(new FollowModel(uid,model.uploaderId),(error, ref) -> {
-
-                        if(error!= null){
-                            Snackbar.make(mView,"Error",BaseTransientBottomBar.LENGTH_LONG).show();
-                        }
-                        else{
-                            Snackbar.make(mView,"Added to follow list",BaseTransientBottomBar.LENGTH_LONG).show();
-                        }
-                    });
-        });
+        //Comment Functionality
+        //comment = mView.findViewById(R.id.editComment);
+        /*comment.setOnClickListener(v -> {
+            //Comment logic
+        });*/
 
         //Download Function(complete)
         download = mView.findViewById(R.id.btnDownload);
@@ -104,6 +97,7 @@ public class VideoHolder extends RecyclerView.ViewHolder {
         });
 
     }
+
 
     private void Download(Context context, String url) {
         Toast.makeText(context, "Video Download Start", Toast.LENGTH_SHORT).show();
@@ -120,27 +114,37 @@ public class VideoHolder extends RecyclerView.ViewHolder {
         downloadManager.enqueue(request);
     }
 
-    public void setVideo(final Application ctx, UploadMember model, int position){
 
+
+    @SuppressLint("ResourceType")
+    public void setVideo(final Application ctx, UploadMember model, /*RegistrationModel registrationModel,*/ int position){
+        ;
         TextView mTextView = mView.findViewById(R.id.titletv);
+        timeText = mView.findViewById(R.id.textTime);
+        channelName = mView.findViewById(R.id.channelName);
         mExoplayerView = mView.findViewById(R.id.exoplayer_view);
-
+        progressBar = mView.findViewById(R.id.progress_bar);
+        //btFullScreen = playerView.findViewById(R.id.bt_fullscreen);
 
         mTextView.setText(model.getTitle());
-
+        timeText.setText(model.getDate());
+        /*channelName.setText(registrationModel.getChannelName());*/
 
         // Now i am using try and catch method for retrieving the videos
 
         try{
+            //getWindow().setFLags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN); not working
+            LoadControl loadControl = new DefaultLoadControl();
             BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter.Builder(ctx).build();
             TrackSelector trackSelector = new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(bandwidthMeter));
-            exoPlayer = (SimpleExoPlayer) ExoPlayerFactory.newSimpleInstance(ctx);
+            exoPlayer = (SimpleExoPlayer) ExoPlayerFactory.newSimpleInstance(ctx,trackSelector,loadControl);
             Uri video = Uri.parse(model.getUrl());
-            DefaultHttpDataSourceFactory dataSourceFactory = new DefaultHttpDataSourceFactory("video");
+            DefaultHttpDataSourceFactory dataSourceFactory = new DefaultHttpDataSourceFactory("video"); //factory = dataSourceFactory
             ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
             MediaSource mediaSource = new ExtractorMediaSource(video, dataSourceFactory, extractorsFactory, null,
                     null);
             mExoplayerView.setPlayer(exoPlayer);
+            mExoplayerView.setKeepScreenOn(true); //keep screen on
             exoPlayer.prepare(mediaSource);
             exoPlayer.setPlayWhenReady(false); // false because if we do this then all video will run simultaneously
             exoPlayer.addListener(new EventListener() {
@@ -154,11 +158,156 @@ public class VideoHolder extends RecyclerView.ViewHolder {
                 }
 
             });
+
+            exoPlayer.addListener(new Player.EventListener(){
+                @Override
+                public void onTimelineChanged(Timeline timeline, @Nullable  Object manifest, int reason) {
+
+                }
+
+                @Override
+                public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+                    if(playbackState == Player.STATE_BUFFERING){
+                        //When buffering jio ke net se check kr lenge
+                        //Show progress bar
+                        progressBar.setVisibility(View.VISIBLE);
+
+                    }else if(playbackState == Player.STATE_READY){
+                        //When ready
+                        //Hide progress bar
+                        progressBar.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onSeekProcessed() {
+
+                }
+            });
+
+            btFullScreen.setOnClickListener(v -> {
+                //Check condition
+                if(flag){
+                    //when flag is true
+                    //set enter full screen Image
+                    btFullScreen.setImageDrawable(ctx.getResources().getDrawable(R.drawable.ic_baseline_fullscreen_24));
+                    //Set portrait orientation
+                    //
+                    //Set flag value is false
+                    flag = false;
+                }else{
+                    //when flag is false
+                    //set exit full screen image
+                    btFullScreen.setImageDrawable(ctx.getResources().getDrawable(R.drawable.ic_baseline_fullscreen_exit_24));
+                    //set landscape orientation
+                    //
+                    //set flag value is true
+                    flag = true;
+                }
+            });
+
+            //Initialize load control
+            //Initialize bandwidth meter already initialized
+
+            //Track selector already initialized
+
         } catch (Exception e){
             Log.e("VideoHolder", "exoplayer error" + e.toString());
         }
     }
+
     public boolean isPlaying(ExoPlayer exoPlayer) {
         return exoPlayer.getPlaybackState() == Player.STATE_READY && exoPlayer.getPlayWhenReady();
+    }
+
+    // Like Functionality
+    public void setLikesButtonStatus(String postkey) {
+        likeButton = mView.findViewById(R.id.like_btn);
+        likesdisplay = mView.findViewById(R.id.like_text);
+        likesref = FirebaseDatabase.getInstance().getReference("video_likes");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String userId = user.getUid();
+        String likes = "likes";
+        likesref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull  DataSnapshot snapshot) {
+
+                if(snapshot.child(postkey).hasChild(userId)){
+                    likesCount = (int)snapshot.child(postkey).getChildrenCount();
+                    likeButton.setImageResource(R.drawable.ic_baseline_favorite_24);
+                    likesdisplay.setText(Integer.toString(likesCount)+likes); //It is for counting the likes
+                }
+                else{
+                    likesCount = (int)snapshot.child(postkey).getChildrenCount();
+                    likeButton.setImageResource(R.drawable.ic_baseline_favorite_border_24);
+                    likesdisplay.setText(Integer.toString(likesCount)+likes); //It is for when viewer take back their like
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull  DatabaseError error) {
+                Snackbar.make(mView.getRootView(), error.getMessage(),BaseTransientBottomBar.LENGTH_LONG).show();
+            }
+        });
+
+    }
+
+    // Dislike Functionality
+    public void setDislikeButtonStatus(String postkey) {
+        dislikeButton = mView.findViewById(R.id.btnDislike);
+        dislikesdisplay = mView.findViewById(R.id.dislikeText);
+        dislikeref = FirebaseDatabase.getInstance().getReference("video_dislikes");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String userId = user.getUid();
+        String dislikes = "dislikes";
+        dislikeref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                if(snapshot.child(postkey).hasChild(userId)){
+                    dislikesCount = (int)snapshot.child(postkey).getChildrenCount();
+                    dislikeButton.setImageResource(R.drawable.ic_baseline_thumbdown_fill);
+                    dislikesdisplay.setText(Integer.toString(dislikesCount)+dislikes); //It is for counting the dislikes
+                }else{
+                    dislikesCount = (int)snapshot.child(postkey).getChildrenCount();
+                    dislikeButton.setImageResource(R.drawable.ic_baseline_thumb_down_off_alt_24);
+                    dislikesdisplay.setText(Integer.toString(dislikesCount)+dislikes); //It is for take back their dislikes
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Snackbar.make(mView.getRootView(),error.getMessage(),BaseTransientBottomBar.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void setFollowButtonStatus(String postkey) {
+        followButton = mView.findViewById(R.id.btnFollow);
+        followsdisplay = mView.findViewById(R.id.followText);
+        followsref = FirebaseDatabase.getInstance().getReference("Followers");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String userId = user.getUid();
+        String follows = "follows";
+        followsref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                if(snapshot.child(postkey).hasChild(userId)){
+                    followCount = (int)snapshot.child(postkey).getChildrenCount();
+                    followButton.setImageResource(R.drawable.ic_baseline_person_add_alt_1_24);
+                    followsdisplay.setText(Integer.toString(followCount)+follows); //It is for counting the follows
+                }else{
+                    followCount = (int)snapshot.child(postkey).getChildrenCount();
+                    followButton.setImageResource(R.drawable.ic_outline_person_add_alt_1_24);
+                    followsdisplay.setText(Integer.toString(followCount)+follows); //It is for simply take back the follow, means user don't want to follow
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Snackbar.make(mView.getRootView(),error.getMessage(),BaseTransientBottomBar.LENGTH_LONG).show();
+            }
+        });
     }
 }

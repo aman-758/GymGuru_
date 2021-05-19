@@ -8,13 +8,25 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
-                  <entry key="channelFragment">
+                  <entry key="chatFragment">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="386" />
-                            <option name="y" value="758" />
+                            <option name="x" value="85" />
+                            <option name="y" value="-299" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="commentFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="889" />
+                            <option name="y" value="402" />
                           </Point>
                         </option>
                       </LayoutPositions>
@@ -31,6 +43,11 @@
                         </option>
                         <option name="myPositions">
                           <map>
+                            <entry key="action_dashboardFragment_to_chatFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="action_dashboardFragment_to_galleryFragment">
                               <value>
                                 <LayoutPositions />
@@ -42,6 +59,11 @@
                               </value>
                             </entry>
                             <entry key="action_dashboardFragment_to_profileFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                            <entry key="action_dashboardFragment_to_settingsFragment">
                               <value>
                                 <LayoutPositions />
                               </value>
@@ -110,6 +132,15 @@
                             <option name="y" value="401" />
                           </Point>
                         </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_homeFragment_to_commentFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
                       </LayoutPositions>
                     </value>
                   </entry>
@@ -165,6 +196,18 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="ratingFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="-224" />
+                            <option name="y" value="-320" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="registerFragment">
                     <value>
                       <LayoutPositions>
@@ -176,17 +219,24 @@
                         </option>
                         <option name="myPositions">
                           <map>
-                            <entry key="action_registerFragment_to_channelFragment">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
                             <entry key="action_registerFragment_to_dashboardFragment">
                               <value>
                                 <LayoutPositions />
                               </value>
                             </entry>
                           </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="settingsFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="497" />
+                            <option name="y" value="-542" />
+                          </Point>
                         </option>
                       </LayoutPositions>
                     </value>

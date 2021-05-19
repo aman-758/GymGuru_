@@ -8,10 +8,10 @@
     tools:context=".HomeFragment">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview_video"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/recyclerview_video">
-
+        android:scrollbars="vertical">
 
 
     </androidx.recyclerview.widget.RecyclerView>

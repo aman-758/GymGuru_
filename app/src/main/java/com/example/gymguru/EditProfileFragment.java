@@ -86,6 +86,8 @@ public class EditProfileFragment extends Fragment {
                 Snackbar.make(bind.getRoot(), "Image uploaded successfully", BaseTransientBottomBar.LENGTH_LONG).show();
                 bind.progressBar.setVisibility(View.GONE);
 
+                //New Code
+                FirebaseDatabase.getInstance().getReference("Users").child(fAuth.getCurrentUser().getUid()).child("ImageUrl").setValue(uri.toString());
             });
         }).addOnFailureListener(e -> {
             Snackbar.make(bind.getRoot(), "Upload Failed", BaseTransientBottomBar.LENGTH_LONG).show();
@@ -112,6 +114,7 @@ public class EditProfileFragment extends Fragment {
                 if (registrationModel != null) {
                     String username = registrationModel.username;
                     String email = registrationModel.email;
+                    String channelName = registrationModel.channelName;
                     String age = registrationModel.age;
                     String experience = registrationModel.experience;
                     String gender = registrationModel.gender;
@@ -120,6 +123,7 @@ public class EditProfileFragment extends Fragment {
                     bind.fireName.setText(username);
                     bind.fireEmail.setText(email);
                     bind.fireAge.setText(age);
+                    bind.editChannel.setText(channelName);
                     bind.fireExperience.setText(experience);
                     bind.fireGender.setText(gender);
                     if(userType.equals("Gym Trainer")){
@@ -145,10 +149,12 @@ public class EditProfileFragment extends Fragment {
         bind.btnSaveChanges.setOnClickListener(v -> {
             String name = bind.fireName.getText().toString();
             String experience = bind.fireExperience.getText().toString();
-            Boolean userType = bind.fireSwitch.getShowText();
+            String channelName = bind.editChannel.getText().toString();
+            //Boolean userType = bind.fireSwitch.getShowText();
+            //String email = bind.fireEmail.getText().toString();
             String age = bind.fireAge.getText().toString();
 
-            updateData(name, experience, age, userType);
+            updateData(name, experience, age, channelName /*email, userType*/);
             bind.progressBar.setVisibility(View.VISIBLE);
         });
 
@@ -164,13 +170,15 @@ public class EditProfileFragment extends Fragment {
 
     }
     //This is the function of update user's data
-    private void updateData(String name, String experience, String age, Boolean userType) {
+    private void updateData(String name, String experience, String age, String channelName/*String email /*Boolean userType*/) {
         // Now creating hashmap to update the data
         HashMap User = new HashMap();
         User.put("username", name);
         User.put("experience", experience);
+        User.put("channelName",channelName);
         User.put("age", age);
-        User.put("UserType",userType);
+        //User.put("UserType",userType);
+        //User.put("email",email);
 
         reference = FirebaseDatabase.getInstance().getReference("Users");
         // Now update the child of the Users
@@ -180,6 +188,8 @@ public class EditProfileFragment extends Fragment {
                 bind.fireName.setText(name);
                 bind.fireExperience.setText(experience);
                 bind.fireAge.setText(age);
+                bind.editChannel.setText(channelName);
+                //bind.fireEmail.setText(email);
                 Snackbar.make(bind.getRoot(), "Data successfully updated", BaseTransientBottomBar.LENGTH_LONG).show();
                 bind.progressBar.setVisibility(View.GONE);
             } else {

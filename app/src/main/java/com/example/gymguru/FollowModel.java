@@ -1,14 +1,14 @@
 package com.example.gymguru;
 
 public class FollowModel {
-    public String UserId,UploaderId;
+    public String ViewerId,UploaderId;
 
     public FollowModel(String uploaderId) { }
 
-    public FollowModel(String UserId, String UploaderId) {
+    public FollowModel(String ViewerId, String UploaderId) {
 
 
-        this.UserId = UserId;
+        this.ViewerId = ViewerId;
         this.UploaderId = UploaderId;
     }
 }

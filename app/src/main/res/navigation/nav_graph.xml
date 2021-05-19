@@ -37,6 +37,9 @@
         <action
             android:id="@+id/action_dashboardFragment_to_galleryFragment"
             app:destination="@id/galleryFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -83,7 +86,11 @@
         android:id="@+id/homeFragment"
         android:name="com.example.gymguru.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_commentFragment"
+            app:destination="@id/commentFragment" />
+    </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.example.gymguru.EditProfileFragment"
@@ -94,4 +101,19 @@
         android:name="com.example.gymguru.GalleryFragment"
         android:label="fragment_gallery"
         tools:layout="@layout/fragment_gallery" />
+    <fragment
+        android:id="@+id/commentFragment"
+        android:name="com.example.gymguru.CommentFragment"
+        android:label="fragment_comment"
+        tools:layout="@layout/fragment_comment" />
+    <fragment
+        android:id="@+id/ratingFragment"
+        android:name="com.example.gymguru.RatingFragment"
+        android:label="fragment_rating"
+        tools:layout="@layout/fragment_rating" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.gymguru.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
 </navigation>

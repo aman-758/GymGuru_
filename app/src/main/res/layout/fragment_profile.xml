@@ -55,7 +55,7 @@
                 tools:src="@drawable/dash_profile" />
 
             <TextView
-                android:id="@+id/textView10"
+                android:id="@+id/profileUser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -64,12 +64,12 @@
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/textView11"
+                app:layout_constraintBottom_toTopOf="@+id/profileUserType"
                 app:layout_constraintStart_toEndOf="@+id/changeProfileImg"
                 app:layout_constraintTop_toTopOf="@+id/changeProfileImg" />
 
             <TextView
-                android:id="@+id/textView11"
+                android:id="@+id/profileUserType"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="30dp"
@@ -79,9 +79,9 @@
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/textView10"
-                app:layout_constraintStart_toStartOf="@+id/textView10"
-                app:layout_constraintTop_toBottomOf="@+id/textView10" />
+                app:layout_constraintEnd_toEndOf="@+id/profileUser"
+                app:layout_constraintStart_toStartOf="@+id/profileUser"
+                app:layout_constraintTop_toBottomOf="@+id/profileUser" />
 
             <ImageView
                 android:id="@+id/editProfile"

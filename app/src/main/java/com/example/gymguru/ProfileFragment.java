@@ -11,14 +11,20 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.gymguru.databinding.FragmentProfileBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 
 
 public class ProfileFragment extends Fragment {
     private FragmentProfileBinding bind;
+    private DatabaseReference reference;
+    private String userId;
+    private FirebaseAuth mAuth;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        mAuth = FirebaseAuth.getInstance();
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
@@ -29,6 +35,7 @@ public class ProfileFragment extends Fragment {
         bind.editProfile.setOnClickListener(v -> {
             NavHostFragment.findNavController(ProfileFragment.this).navigate(R.id.action_profileFragment_to_editProfileFragment);
         });
-    }
+        
 
+    }
 }
