@@ -1,20 +1,28 @@
 package com.example.gymguru;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.view.SupportActionModeWrapper;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
-
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
+
+import com.example.gymguru.databinding.FragmentSplashBinding;
 
 
 public class SplashFragment extends Fragment {
+    private FragmentSplashBinding bind;
+    /*ImageView logoImage;
+    TextView logoText;
+    Button startButton;*/
+
+    Animation sidelogoanim, sidetextanim,buttonanim;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -28,6 +36,17 @@ public class SplashFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         super.onViewCreated(view, savedInstanceState);
+        bind = FragmentSplashBinding.bind(view);
+
+        // code  for animaton
+        sidelogoanim = AnimationUtils.loadAnimation( getActivity() ,R.anim.sidelogo_anim) ;
+        sidetextanim= AnimationUtils.loadAnimation( getActivity() ,R.anim.sidetext_anim);
+        buttonanim= AnimationUtils.loadAnimation( getActivity() ,R.anim.button_anim);
+        //set animation on elements
+        bind.logoView.setAnimation(sidelogoanim);
+        bind.GYMText.setAnimation(sidetextanim);
+        bind.getstatedBtn.setAnimation(buttonanim);
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

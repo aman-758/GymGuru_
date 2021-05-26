@@ -1,5 +1,6 @@
 package com.example.gymguru;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,10 +10,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.gymguru.databinding.FragmentHomeBinding;
@@ -25,10 +28,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment{
     private FragmentHomeBinding bind;
     FirebaseDatabase database;
     DatabaseReference reference;
@@ -36,6 +40,9 @@ public class HomeFragment extends Fragment {
     Boolean likeChecker = false;
     Boolean dislikeChecker = false;
     Boolean followChecker = false;
+    String title;
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,10 +54,13 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         bind = FragmentHomeBinding.bind(view);
 
         bind.recyclerviewVideo.setHasFixedSize(true);
+
         bind.recyclerviewVideo.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         database = FirebaseDatabase.getInstance();
         reference = database.getReference("videos");
         likesreference = database.getReference("video_likes");
@@ -82,13 +92,25 @@ public class HomeFragment extends Fragment {
 
                     @Override
                     protected void populateViewHolder(VideoHolder videoHolder, UploadMember model /*RegistrationModel registrationModel*/, int position) {
+
                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                         String currentUserId = user.getUid();
                         final String postkey = getRef(position).getKey(); //It will currently get the key of the post
 
 
                         Log.d("Message", model.getUrl());
+                        videoHolder.setOnClickListener(new VideoHolder.Clicklistener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                //
+                            }
 
+                            @Override
+                            public void onItemLongClick(View view, int position) {
+                                title = getItem(position).getTitle();
+                                showDeleteDialogName(model.title);
+                            }
+                        });
                         videoHolder.setVideo(requireActivity().getApplication(), model, /*registrationModel,*/ position);
                         String videoId = this.getRef(position).getKey();
                         videoHolder.initui(getActivity(), model, /*registrationModel,*/ position, videoId,getChildFragmentManager());
@@ -102,9 +124,11 @@ public class HomeFragment extends Fragment {
                                     if(likeChecker.equals(true)){
                                         if(snapshot.child(postkey).hasChild(currentUserId)){
                                             likesreference.child(postkey).child(currentUserId).removeValue(); //this is for that user could not like the same video again and again
+
                                             likeChecker = false;
                                         }else{
                                             likesreference.child(postkey).child(currentUserId).setValue(true);
+                                            dislikesreference.child(postkey).child(currentUserId).removeValue();
                                             likeChecker = false;
                                         }
                                     }
@@ -124,10 +148,12 @@ public class HomeFragment extends Fragment {
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if(dislikeChecker.equals(true)){
                                         if(snapshot.child(postkey).hasChild(currentUserId)){
-                                            dislikesreference.child(postkey).child(currentUserId).removeValue(); //User already gives the dislike so they could not again
+                                            dislikesreference.child(postkey).child(currentUserId).removeValue(); //User already gives the dislike so they could not again yani user dislike wapas le rha hai
+
                                             dislikeChecker = false;
                                         }else{
-                                            dislikesreference.child(postkey).child(currentUserId).setValue(true); //User can give dislike only once
+                                            dislikesreference.child(postkey).child(currentUserId).setValue(true);//User dislike the trainer video
+                                            likesreference.child(postkey).child(currentUserId).removeValue();
                                             dislikeChecker = false;
                                         }
                                     }
@@ -162,12 +188,44 @@ public class HomeFragment extends Fragment {
                                 }
                             });
                         });
-                    }
+                        videoHolder.comment.setOnClickListener(v -> {
 
+                            HomeFragmentDirections.ActionHomeFragmentToCommentFragment dir = HomeFragmentDirections.actionHomeFragmentToCommentFragment(postkey);
+                            NavHostFragment.findNavController(HomeFragment.this).navigate(dir);
+
+                        });
+                    }
                 };
 
         bind.recyclerviewVideo.setAdapter(firebaseRecyclerAdapter);
 
+    }
+
+    private void showDeleteDialogName(String title) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Delete");
+        builder.setMessage("Are you sure you want to delete this video?");
+        builder.setPositiveButton("Yes", (dialog, which) -> {
+            Query query = reference.orderByChild("title").equalTo(title);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot dataSnapshot1 : snapshot.getChildren()) {
+                        dataSnapshot1.getRef().removeValue();
+                    }
+                    Toast.makeText(getActivity(), "Video Deleted", Toast.LENGTH_SHORT).show();
+                }
+                @Override
+                public void onCancelled(@NonNull  DatabaseError error) {
+                    Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+        builder.setNegativeButton("No", (dialog, which) -> {
+            dialog.dismiss();
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     @Override

@@ -47,7 +47,6 @@ public class DashboardFragment extends Fragment {
         // Inflate the layout for this fragment
         auth = FirebaseAuth.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
-
         Storage = FirebaseStorage.getInstance();
         //storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(user.getUid()).child("Profiles");
 
@@ -66,11 +65,11 @@ public class DashboardFragment extends Fragment {
             first.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    FirebaseDatabase.getInstance().getReference("Users").child(auth.getCurrentUser().getUid()).child("ImageUrl").get().addOnSuccessListener(dataSnapshot -> {
+                    FirebaseDatabase.getInstance().getReference("Users").child(auth.getCurrentUser().getUid()).child("imageUrl").get().addOnSuccessListener(dataSnapshot -> {
                         try {
                             String url = dataSnapshot.getValue().toString();
                             Picasso.get().load(url).into(bind.dpImg);
-                            Log.d("ImageUrl", url);
+                            Log.d("imageUrl", url);
 
                         } catch (Exception e) {
                             //Snackbar.make(bind.getRoot(),e.getMessage(),BaseTransientBottomBar.LENGTH_LONG).show();
@@ -136,7 +135,9 @@ public class DashboardFragment extends Fragment {
                 }
             });
 
-
+            bind.cardLive.setOnClickListener(v -> {
+                NavHostFragment.findNavController(DashboardFragment.this).navigate(R.id.action_dashboardFragment_to_liveFragment);
+            });
 
         }
 

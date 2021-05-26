@@ -62,34 +62,45 @@ public class VideoHolder extends RecyclerView.ViewHolder {
     SimpleExoPlayer exoPlayer;
     private PlayerView mExoplayerView;
     ImageButton likeButton, dislikeButton, followButton;
-    private ImageView download,comment,save;
+    ImageView download,comment;
     TextView likesdisplay, dislikesdisplay, followsdisplay;
     DatabaseReference likesref, dislikeref, followsref;
     int likesCount, dislikesCount, followCount;
+
     public VideoHolder( View itemView) {
         super(itemView);
         mView = itemView;
 
+        //this is for deleting the video
+        itemView.setOnClickListener(v -> {
+            mClickListener.onItemClick(v,getAdapterPosition());
+        });
+        itemView.setOnLongClickListener(v -> {
+            mClickListener.onItemLongClick(v, getAdapterPosition());
+            return false;
+        });
     }
 
     // This is the function where i control all the function of row.xml
-
     public void initui(Context ctx, UploadMember model, /*RegistrationModel registrationModel,*/ int position, String videoId, FragmentManager fm){
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
 
         //Rating System
         rating = mView.findViewById(R.id.ratingBtn);
         rating.setOnClickListener(v ->  {
-             new RatingFragment().show(fm,"Rating");
+            RatingFragment rating = new RatingFragment();
+            rating.setVideoId(videoId);
+            rating.setUserId(uid);
+            rating.show (fm,"Rating");
+
         });
 
         //Comment Functionality
-        //comment = mView.findViewById(R.id.editComment);
-        /*comment.setOnClickListener(v -> {
-            //Comment logic
-        });*/
+        comment = mView.findViewById(R.id.comment_img); //Here i passing through the reference further for recycler view
 
-        //Download Function(complete)
+
+        //Download Function
         download = mView.findViewById(R.id.btnDownload);
         download.setOnClickListener(v -> {
             Download(mView.getContext(),model.url);
@@ -97,7 +108,6 @@ public class VideoHolder extends RecyclerView.ViewHolder {
         });
 
     }
-
 
     private void Download(Context context, String url) {
         Toast.makeText(context, "Video Download Start", Toast.LENGTH_SHORT).show();
@@ -159,6 +169,8 @@ public class VideoHolder extends RecyclerView.ViewHolder {
 
             });
 
+
+
             exoPlayer.addListener(new Player.EventListener(){
                 @Override
                 public void onTimelineChanged(Timeline timeline, @Nullable  Object manifest, int reason) {
@@ -216,6 +228,16 @@ public class VideoHolder extends RecyclerView.ViewHolder {
         }
     }
 
+    //For deleting the video
+    private VideoHolder.Clicklistener mClickListener;
+    public interface Clicklistener{
+        void onItemClick(View view, int position);
+        void onItemLongClick(View view, int position);
+    }
+    public void setOnClickListener(VideoHolder.Clicklistener clicklistener){
+        mClickListener = clicklistener;
+    }
+
     public boolean isPlaying(ExoPlayer exoPlayer) {
         return exoPlayer.getPlaybackState() == Player.STATE_READY && exoPlayer.getPlayWhenReady();
     }
@@ -227,7 +249,7 @@ public class VideoHolder extends RecyclerView.ViewHolder {
         likesref = FirebaseDatabase.getInstance().getReference("video_likes");
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String userId = user.getUid();
-        String likes = "likes";
+        String likes = "";
         likesref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull  DataSnapshot snapshot) {
@@ -259,7 +281,7 @@ public class VideoHolder extends RecyclerView.ViewHolder {
         dislikeref = FirebaseDatabase.getInstance().getReference("video_dislikes");
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String userId = user.getUid();
-        String dislikes = "dislikes";
+        String dislikes = "";
         dislikeref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -287,8 +309,10 @@ public class VideoHolder extends RecyclerView.ViewHolder {
         followsdisplay = mView.findViewById(R.id.followText);
         followsref = FirebaseDatabase.getInstance().getReference("Followers");
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
         String userId = user.getUid();
-        String follows = "follows";
+        String follows = "";
+
         followsref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

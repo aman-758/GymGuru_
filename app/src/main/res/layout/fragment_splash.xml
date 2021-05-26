@@ -5,46 +5,58 @@
     android:id="@+id/frameLayout4"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/login_bg"
+    android:background="@drawable/ladyluck"
     tools:context=".SplashFragment">
 
     <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="wrap_content"
-        android:layout_height="150dp"
-        android:layout_marginTop="170dp"
-        android:layout_marginBottom="20dp"
-        android:foregroundGravity="center"
-        android:src="@drawable/logo"
-        app:layout_constraintBottom_toTopOf="@+id/textView5"
+        android:id="@+id/logo_view"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="50dp"
+        android:foregroundGravity="center_vertical"
+        android:src="@drawable/gymguru"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/GYM_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Welcome to GymGuru"
+        android:layout_marginStart="71dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginEnd="86dp"
+        android:layout_marginBottom="50dp"
+        android:foregroundGravity="center_vertical"
+        android:text="GYM GURU "
+        android:textAlignment="textStart"
         android:textColor="@color/white"
-        android:textSize="30sp"
+        android:textSize="48sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/getstated_btn"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+        app:layout_constraintTop_toBottomOf="@+id/logo_view" />
 
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/getstated_btn"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="130dp"
-        android:layout_marginTop="10dp"
-        android:text="Commit to be fit.."
-        android:textColor="@color/white"
-        android:textSize="18sp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginBottom="149dp"
+        android:background="@drawable/getstarted"
+        android:foregroundGravity="center_vertical"
+        android:text="Get Started"
+        android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/textView5"
-        app:layout_constraintStart_toStartOf="@+id/textView5"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/GYM_text" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

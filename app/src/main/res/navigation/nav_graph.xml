@@ -38,8 +38,8 @@
             android:id="@+id/action_dashboardFragment_to_galleryFragment"
             app:destination="@id/galleryFragment" />
         <action
-            android:id="@+id/action_dashboardFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
+            android:id="@+id/action_dashboardFragment_to_liveFragment"
+            app:destination="@id/liveFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -105,15 +105,14 @@
         android:id="@+id/commentFragment"
         android:name="com.example.gymguru.CommentFragment"
         android:label="fragment_comment"
-        tools:layout="@layout/fragment_comment" />
+        tools:layout="@layout/fragment_comment" >
+        <argument
+            android:name="postkey"
+            app:argType="string" />
+    </fragment>
     <fragment
-        android:id="@+id/ratingFragment"
-        android:name="com.example.gymguru.RatingFragment"
-        android:label="fragment_rating"
-        tools:layout="@layout/fragment_rating" />
-    <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.example.gymguru.SettingsFragment"
-        android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" />
+        android:id="@+id/liveFragment"
+        android:name="com.example.gymguru.LiveFragment"
+        android:label="fragment_live"
+        tools:layout="@layout/fragment_live" />
 </navigation>

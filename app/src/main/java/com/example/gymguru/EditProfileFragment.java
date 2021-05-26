@@ -87,7 +87,7 @@ public class EditProfileFragment extends Fragment {
                 bind.progressBar.setVisibility(View.GONE);
 
                 //New Code
-                FirebaseDatabase.getInstance().getReference("Users").child(fAuth.getCurrentUser().getUid()).child("ImageUrl").setValue(uri.toString());
+                FirebaseDatabase.getInstance().getReference("Users").child(fAuth.getCurrentUser().getUid()).child("imageUrl").setValue(uri.toString());
             });
         }).addOnFailureListener(e -> {
             Snackbar.make(bind.getRoot(), "Upload Failed", BaseTransientBottomBar.LENGTH_LONG).show();

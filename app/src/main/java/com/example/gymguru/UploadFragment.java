@@ -108,8 +108,8 @@ public class UploadFragment extends Fragment {
         bind.progUpload.setVisibility(View.VISIBLE);
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Date currentTime = Calendar.getInstance().getTime();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-        String strDate = dateFormat. format(currentTime);
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yy hh:mm");
+        String strDate = dateFormat.format(currentTime);
 
         if(videoUri != null){
             StorageReference reference = storageReference.child(System.currentTimeMillis()+

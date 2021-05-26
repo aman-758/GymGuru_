@@ -73,7 +73,7 @@ public class RegisterFragment extends Fragment {
                                     auth.createUserWithEmailAndPassword(email, password)
                                             .addOnSuccessListener(authResult -> {
                                                 String uid = authResult.getUser().getUid();
-                                                RegistrationModel registrationModel = new RegistrationModel(uid, username, age, email, experience, channelName, finalGenderType, finalUserType);
+                                                RegistrationModel registrationModel = new RegistrationModel(uid, username, age, email, experience, channelName, finalGenderType, finalUserType,"");
 
                                                 //FirebaseUser user = authResult.getUser();
                                                 UserProfileChangeRequest req = new UserProfileChangeRequest.Builder().setDisplayName(username).build();

@@ -14,6 +14,7 @@ public class GalleryHolder extends RecyclerView.ViewHolder {
     ImageView trainerImg;
 
 
+
     public GalleryHolder(View itemView){
         super(itemView);
         mView = itemView;
@@ -22,10 +23,6 @@ public class GalleryHolder extends RecyclerView.ViewHolder {
     @SuppressLint("ResourceType")
     public void setTrainer(Context ct, RegistrationModel registrationModel, int i) {
         channelName = mView.findViewById(R.id.channelText);
-        numberVideos = mView.findViewById(R.id.numberVideos);
-        numberFollowers = mView.findViewById(R.id.numberFollow);
-        channelRating = mView.findViewById(R.id.channelRating);
-        trainerImg = mView.findViewById(R.id.trainerImg);
 
         channelName.setText(registrationModel.getChannelName());
 

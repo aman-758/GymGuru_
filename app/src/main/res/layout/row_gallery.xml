@@ -1,87 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#252324">
+    android:layout_height="200dp"
+    android:layout_marginBottom="10dp"
+    app:cardBackgroundColor="#252324"
+    app:cardElevation="12dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
 
-    <androidx.cardview.widget.CardView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp"
-        app:cardBackgroundColor="#252324"
-        app:cardElevation="15dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        android:background="#252324">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <ImageView
+            android:id="@+id/trainerImg"
+            android:layout_width="200dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/dash_profile" />
+
+        <TextView
+            android:id="@+id/channelText"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#252324">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="200dp"
+            android:layout_marginEnd="10dp"
+            android:fontFamily="@font/coiny"
+            android:text="ChannelName"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@+id/trainerImg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/trainerImg"
+            app:layout_constraintTop_toTopOf="@+id/trainerImg" />
 
-            <ImageView
-                android:id="@+id/trainerImg"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/dash_profile" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
 
-            <TextView
-                android:id="@+id/channelText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginBottom="155dp"
-                android:fontFamily="@font/coiny"
-                android:text="Channel Name"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="@+id/trainerImg"
-                app:layout_constraintStart_toEndOf="@+id/trainerImg"
-                app:layout_constraintTop_toTopOf="@+id/trainerImg" />
-
-            <TextView
-                android:id="@+id/numberVideos"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/coiny"
-                android:text="No. of Videos"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="@+id/channelText"
-                app:layout_constraintTop_toBottomOf="@+id/channelText" />
-
-            <TextView
-                android:id="@+id/numberFollow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/coiny"
-                android:text="No. of followers"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="@+id/numberVideos"
-                app:layout_constraintTop_toBottomOf="@+id/numberVideos" />
-
-            <TextView
-                android:id="@+id/channelRating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/coiny"
-                android:text="Channel Ratings"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="@+id/numberFollow"
-                app:layout_constraintTop_toBottomOf="@+id/numberFollow" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
