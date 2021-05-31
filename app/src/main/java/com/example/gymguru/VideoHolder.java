@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -48,10 +49,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
 public class VideoHolder extends RecyclerView.ViewHolder {
     private static final int PERMISSION_STORAGE_CODE = 1000;
+    private FirebaseAuth auth;
+    ArrayList<RegistrationModel>trainerList;
+    FirebaseDatabase database;
+    private DatabaseReference users;
     View mView;
     Button rating;
     TextView timeText,channelName;
@@ -62,7 +69,7 @@ public class VideoHolder extends RecyclerView.ViewHolder {
     SimpleExoPlayer exoPlayer;
     private PlayerView mExoplayerView;
     ImageButton likeButton, dislikeButton, followButton;
-    ImageView download,comment;
+    ImageView download,comment,channelImg;
     TextView likesdisplay, dislikesdisplay, followsdisplay;
     DatabaseReference likesref, dislikeref, followsref;
     int likesCount, dislikesCount, followCount;
@@ -83,23 +90,41 @@ public class VideoHolder extends RecyclerView.ViewHolder {
 
     // This is the function where i control all the function of row.xml
     public void initui(Context ctx, UploadMember model, /*RegistrationModel registrationModel,*/ int position, String videoId, FragmentManager fm){
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+         auth = FirebaseAuth.getInstance();
+         database = FirebaseDatabase.getInstance();
+         users = database.getReference("Users");
 
-
+         trainerList = new ArrayList<>();
         //Rating System
-        rating = mView.findViewById(R.id.ratingBtn);
-        rating.setOnClickListener(v ->  {
+         rating = mView.findViewById(R.id.ratingBtn);
+         rating.setOnClickListener(v ->  {
             RatingFragment rating = new RatingFragment();
             rating.setVideoId(videoId);
             rating.setUserId(uid);
             rating.show (fm,"Rating");
 
         });
-
-        //Comment Functionality
+        //Comment
         comment = mView.findViewById(R.id.comment_img); //Here i passing through the reference further for recycler view
+        //Fetching trainer details on the video
+        channelName = mView.findViewById(R.id.channelName);
+        channelImg = mView.findViewById(R.id.channelImg);
 
+        users.child(model.uploaderId).get().addOnSuccessListener(dataSnapshot -> {
+            RegistrationModel registrationModel = dataSnapshot.getValue(RegistrationModel.class);
+            if (registrationModel != null && registrationModel.userType.equals("Gym Trainer")) {
+                Glide.with(ctx).load(registrationModel.getImageUrl()).into(channelImg);
+                channelName.setText(registrationModel.getChannelName());
+                trainerList.add(registrationModel);
+                Log.d("Info", registrationModel.getUserType());
+                Log.d("Info",registrationModel.getUid());
+                Log.d("Info",videoId);
+            }
 
+        }).addOnFailureListener(e -> {
+            //Handle the error
+        });
         //Download Function
         download = mView.findViewById(R.id.btnDownload);
         download.setOnClickListener(v -> {
@@ -128,10 +153,8 @@ public class VideoHolder extends RecyclerView.ViewHolder {
 
     @SuppressLint("ResourceType")
     public void setVideo(final Application ctx, UploadMember model, /*RegistrationModel registrationModel,*/ int position){
-        ;
         TextView mTextView = mView.findViewById(R.id.titletv);
         timeText = mView.findViewById(R.id.textTime);
-        channelName = mView.findViewById(R.id.channelName);
         mExoplayerView = mView.findViewById(R.id.exoplayer_view);
         progressBar = mView.findViewById(R.id.progress_bar);
         //btFullScreen = playerView.findViewById(R.id.bt_fullscreen);
@@ -190,7 +213,6 @@ public class VideoHolder extends RecyclerView.ViewHolder {
                         progressBar.setVisibility(View.GONE);
                     }
                 }
-
                 @Override
                 public void onSeekProcessed() {
 

@@ -10,10 +10,10 @@
 
     <ImageView
         android:id="@+id/logo_view"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         android:layout_marginTop="50dp"
-        android:foregroundGravity="center_vertical"
+        android:foregroundGravity="center"
         android:src="@drawable/gymguru"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
@@ -22,34 +22,31 @@
 
     <TextView
         android:id="@+id/GYM_text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="71dp"
-        android:layout_marginTop="70dp"
-        android:layout_marginEnd="86dp"
-        android:layout_marginBottom="50dp"
-        android:foregroundGravity="center_vertical"
-        android:text="GYM GURU "
-        android:textAlignment="textStart"
+        android:layout_marginTop="5dp"
+        android:foregroundGravity="center"
+        android:padding="2dp"
+        android:text="Commit to be fit..."
+        android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="48sp"
+        android:textSize="25sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/getstated_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logo_view" />
+        app:layout_constraintTop_toBottomOf="@+id/greetLogo" />
 
     <Button
         android:id="@+id/getstated_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="80dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="230dp"
         android:layout_marginEnd="80dp"
-        android:layout_marginBottom="149dp"
+        android:layout_marginBottom="100dp"
         android:background="@drawable/getstarted"
-        android:foregroundGravity="center_vertical"
+        android:foregroundGravity="center"
         android:text="Get Started"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -58,5 +55,21 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/GYM_text" />
+
+    <TextView
+        android:id="@+id/greetLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/bevan"
+        android:foregroundGravity="center"
+        android:padding="2dp"
+        android:text="Welcome to GymGuru"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logo_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

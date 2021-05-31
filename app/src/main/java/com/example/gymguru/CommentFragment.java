@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -35,6 +37,7 @@ public class CommentFragment extends Fragment {
     String postkey;
     ArrayList<CommentModel> commentModels;
     FirebaseDatabase database;
+    private Animation commentAnim;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,6 +52,12 @@ public class CommentFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         bind = FragmentCommentBinding.bind(view);
+
+        //code for animation
+        commentAnim = AnimationUtils.loadAnimation(getActivity(),R.anim.slide_down);
+        //set animation on element
+        bind.commentAnim.setAnimation(commentAnim);
+
         postkey = CommentFragmentArgs.fromBundle(getArguments()).getPostkey();
         userref = FirebaseDatabase.getInstance().getReference().child("Users");
         commentref = FirebaseDatabase.getInstance().getReference().child("videos").child(postkey).child("comments"); //Here i created comment children

@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +23,7 @@ public class LoginFragment extends Fragment {
 
     private FirebaseAuth auth;
     private FragmentLoginBinding bind;
+    private Animation showAnim, loginFace, showAnim1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -33,6 +36,15 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable  Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         bind = FragmentLoginBinding.bind(view);
+        //code for animation
+        //showAnim = AnimationUtils.loadAnimation(getActivity(),R.anim.slide_down);
+        loginFace = AnimationUtils.loadAnimation(getActivity(),R.anim.slide_up);
+        loginFace = AnimationUtils.loadAnimation(getActivity(),R.anim.fadein);
+        showAnim1 = AnimationUtils.loadAnimation(getActivity(),R.anim.slide_up);
+        //set animation on element
+        //bind.showAnim.setAnimation(showAnim);
+        bind.loginFace.setAnimation(loginFace);
+        bind.showAnim1.setAnimation(showAnim1);
 
         bind.btnLogin.setOnClickListener(v -> {
             String email = bind.editEmail.getText().toString();

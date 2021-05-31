@@ -22,7 +22,7 @@ public class SplashFragment extends Fragment {
     TextView logoText;
     Button startButton;*/
 
-    Animation sidelogoanim, sidetextanim,buttonanim;
+    private Animation sidelogoanim, sidetextanim, buttonanim, greetLogoAnim;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,20 +39,17 @@ public class SplashFragment extends Fragment {
         bind = FragmentSplashBinding.bind(view);
 
         // code  for animaton
+
         sidelogoanim = AnimationUtils.loadAnimation( getActivity() ,R.anim.sidelogo_anim) ;
         sidetextanim= AnimationUtils.loadAnimation( getActivity() ,R.anim.sidetext_anim);
         buttonanim= AnimationUtils.loadAnimation( getActivity() ,R.anim.button_anim);
+        greetLogoAnim = AnimationUtils.loadAnimation(getActivity(),R.anim.sidelogo_anim);
+
         //set animation on elements
         bind.logoView.setAnimation(sidelogoanim);
         bind.GYMText.setAnimation(sidetextanim);
         bind.getstatedBtn.setAnimation(buttonanim);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                NavHostFragment.findNavController(SplashFragment.this).navigate(R.id.action_splashFragment_to_loginFragment);
-            }
-
-        },3000);
+        bind.greetLogo.setAnimation(sidetextanim);
+        new Handler().postDelayed(() -> NavHostFragment.findNavController(SplashFragment.this).navigate(R.id.action_splashFragment_to_loginFragment),3000);
     }
 }

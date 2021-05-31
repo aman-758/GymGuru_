@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +22,7 @@ public class ProfileFragment extends Fragment {
     private DatabaseReference reference;
     private String userId;
     private FirebaseAuth mAuth;
+    Animation profileAnim;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -32,6 +35,11 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull  View view, @Nullable  Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         bind = FragmentProfileBinding.bind(view);
+        //code for animation
+        profileAnim = AnimationUtils.loadAnimation(getActivity(),R.anim.slide_down);
+        //set animation on elements
+        bind.profileAnim.setAnimation(profileAnim);
+
         bind.editProfile.setOnClickListener(v -> {
             NavHostFragment.findNavController(ProfileFragment.this).navigate(R.id.action_profileFragment_to_editProfileFragment);
         });

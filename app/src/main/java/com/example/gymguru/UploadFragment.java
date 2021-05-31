@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.MimeTypeMap;
 import android.widget.MediaController;
 
@@ -21,6 +23,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -29,6 +32,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -41,8 +45,13 @@ public class UploadFragment extends Fragment {
     private Uri videoUri;
     MediaController mediaController;
     private StorageReference storageReference;
-    private DatabaseReference databaseReference;
+    private DatabaseReference databaseReference,users,viewer;
+    private FirebaseAuth mAuth;
+    FirebaseDatabase database;
     private long duration;
+    Boolean checker = false;
+    private Animation uploadAnim;
+    private ArrayList<RegistrationModel> trainer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,13 +71,42 @@ public class UploadFragment extends Fragment {
 
         storageReference = FirebaseStorage.getInstance().getReference("videos");
         databaseReference = FirebaseDatabase.getInstance().getReference("videos");
+
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser users = FirebaseAuth.getInstance().getCurrentUser();
+        database = FirebaseDatabase.getInstance();
+        viewer = database.getReference("Users");
         bind = FragmentUploadBinding.bind(view);
+
+        //code for animation
+        uploadAnim = AnimationUtils.loadAnimation(getActivity(),R.anim.slide_down);
+        //set animation on element
+        bind.uploadAnim.setAnimation(uploadAnim);
+        trainer = new ArrayList<>();
         bind.videoView.setMediaController(mediaController);
         mediaController.setAnchorView(bind.videoView);
         bind.videoView.start();
 
         bind.chooseBtn.setOnClickListener(view1 -> {
-            ChooseVideo();
+
+                viewer.child(mAuth.getCurrentUser().getUid()).get().addOnSuccessListener(dataSnapshot -> {
+                   RegistrationModel registrationModel = dataSnapshot.getValue(RegistrationModel.class);
+                   if(registrationModel.userType.equals("Gym Trainer")){
+                       ChooseVideo();
+                   }
+                });
+
+               /*for(DataSnapshot child : dataSnapshot.getChildren()){
+                   RegistrationModel registrationModel = child.getValue(RegistrationModel.class);
+                   if(registrationModel != null && registrationModel.userType.equals("Gym Trainer")){
+
+                       trainer.add(registrationModel);
+                       Log.d("Info",registrationModel.getUserType());
+                   }else{
+                       Snackbar.make(bind.getRoot(),"Viewer can't upload the video",BaseTransientBottomBar.LENGTH_LONG).show();
+                   }
+               }*/
+
         });
         bind.uploadBtn.setOnClickListener(v -> {
             Uploadvideo();
@@ -80,7 +118,7 @@ public class UploadFragment extends Fragment {
         Intent intent = new Intent();
         intent.setType("video/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent,PICK_VIDEO_REQUEST);
+        startActivityForResult(intent, PICK_VIDEO_REQUEST);
     }
 
     @Override

@@ -23,8 +23,6 @@ public class RatingFragment extends DialogFragment {
     private String videoId;
     private String uid;
     private float rating = 0;
-
-
     @NonNull
 
     @Override
@@ -42,6 +40,8 @@ public class RatingFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         bind = RatingFragmentBinding.bind(view);
+
+
         bind.btnSubmit.setOnClickListener(v -> {
             DatabaseReference push = FirebaseDatabase.getInstance().getReference("videos").child(videoId).child("ratings").push();
             HashMap<String,Object> data = new HashMap<>();
@@ -55,7 +55,6 @@ public class RatingFragment extends DialogFragment {
         });
 
     }
-
         //Setters
         public void setVideoId(String videoId){
             this.videoId = videoId;

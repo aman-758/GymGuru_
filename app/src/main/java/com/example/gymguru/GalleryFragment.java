@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,7 +30,7 @@ public class GalleryFragment extends Fragment {
     FirebaseDatabase database;
     private DatabaseReference users;
     ArrayList<RegistrationModel> trainerList, followList;
-
+    private Animation galleryAnim;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -45,6 +47,12 @@ public class GalleryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         bind = FragmentGalleryBinding.bind(view);
+
+        //code for animation
+        galleryAnim = AnimationUtils.loadAnimation(getActivity(),R.anim.dash_sidetext);
+        //set animation on element
+        bind.galleryAnim.setAnimation(galleryAnim);
+
         bind.recyclerViewImg.setHasFixedSize(true);
         bind.recyclerViewImg.setLayoutManager(new LinearLayoutManager(getActivity()));
         trainerList = new ArrayList<>();

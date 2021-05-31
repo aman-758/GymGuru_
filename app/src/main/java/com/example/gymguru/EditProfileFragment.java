@@ -8,11 +8,14 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.example.gymguru.databinding.FragmentEditProfileBinding;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -40,7 +43,7 @@ public class EditProfileFragment extends Fragment {
     private DatabaseReference reference;
     private String userId;
     private FragmentEditProfileBinding bind;
-
+    private Animation editProfileAnim;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,7 +58,7 @@ public class EditProfileFragment extends Fragment {
         // I am doing this because every user have their own profile image.
         StorageReference profileRef = storageReference.child("Users/" + fAuth.getCurrentUser().getUid() + "/Profiles");
         profileRef.getDownloadUrl().addOnSuccessListener(uri -> {
-            Picasso.get().load(uri).into(bind.changeProfileImg);
+            Glide.with(getActivity()).load(uri).into(bind.changeProfileImg);
         });
         return inflater.inflate(R.layout.fragment_edit_profile, container, false);
 
@@ -99,6 +102,12 @@ public class EditProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         bind = FragmentEditProfileBinding.bind(view);
+
+        //code for animation
+        editProfileAnim = AnimationUtils.loadAnimation(getActivity(),R.anim.edit_side);
+        //set animation on element
+        bind.editProfileAnim.setAnimation(editProfileAnim);
+
         reference = FirebaseDatabase.getInstance().getReference("Users");
         storageReference = FirebaseStorage.getInstance().getReference(); // this storage reference is to upload the image on firebase
         userId = user.getUid();
@@ -166,9 +175,9 @@ public class EditProfileFragment extends Fragment {
             bind.progressBar.setVisibility(View.VISIBLE);
         });
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //This is the function of update user's data
     private void updateData(String name, String experience, String age, String channelName/*String email /*Boolean userType*/) {
         // Now creating hashmap to update the data

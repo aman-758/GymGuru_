@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -13,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.bumptech.glide.Glide;
 import com.example.gymguru.databinding.FragmentDashboardBinding;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -25,7 +28,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
 
 
 public class DashboardFragment extends Fragment {
@@ -40,6 +42,7 @@ public class DashboardFragment extends Fragment {
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
     private DatabaseReference first = databaseReference.child("Users");
+    private Animation welcomeAnim,startAnim;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,7 +62,12 @@ public class DashboardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         bind = FragmentDashboardBinding.bind(view);
-
+        //Code for animation
+        welcomeAnim = AnimationUtils.loadAnimation(getActivity(),R.anim.dash_sidetext);
+        startAnim = AnimationUtils.loadAnimation(getActivity(),R.anim.slide_down);
+        //set animation on element
+        bind.dashAnim.setAnimation(welcomeAnim);
+        bind.animConstr.setAnimation(startAnim);
 
         if (auth.getCurrentUser() != null) {
             first.addValueEventListener(new ValueEventListener() {
@@ -68,7 +76,7 @@ public class DashboardFragment extends Fragment {
                     FirebaseDatabase.getInstance().getReference("Users").child(auth.getCurrentUser().getUid()).child("imageUrl").get().addOnSuccessListener(dataSnapshot -> {
                         try {
                             String url = dataSnapshot.getValue().toString();
-                            Picasso.get().load(url).into(bind.dpImg);
+                            Glide.with(getActivity()).load(url).into(bind.dpImg);
                             Log.d("imageUrl", url);
 
                         } catch (Exception e) {
@@ -90,7 +98,7 @@ public class DashboardFragment extends Fragment {
                 auth.signOut();
                 NavHostFragment.findNavController(this).navigateUp();
             });
-            bind.cardChat.setOnClickListener(v -> {
+            bind.cardLive.setOnClickListener(v -> {
                 //
             });
             bind.userProfileCard.setOnClickListener(view1 -> {

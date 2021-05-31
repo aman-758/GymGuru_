@@ -38,24 +38,22 @@
             android:layout_height="220dp"
             android:layout_gravity="center"
             android:background="@color/black"
-            app:hide_on_touch="true"
-            app:show_timeout="5000"
-            app:rewind_increment="10000"
-            app:fastforward_increment="10000"
-            app:use_controller="true"
-            app:player_layout_id="@layout/exo_simple_player_view"
             app:controller_layout_id="@layout/custom_controller"
-            app:resize_mode="fit">
+            app:fastforward_increment="10000"
+            app:hide_on_touch="true"
+            app:player_layout_id="@layout/exo_simple_player_view"
+            app:resize_mode="fit"
+            app:rewind_increment="10000"
+            app:show_timeout="5000"
+            app:use_controller="true">
 
             <ProgressBar
+                android:id="@+id/progress_bar"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:id="@+id/progress_bar"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center" />
 
         </com.google.android.exoplayer2.ui.PlayerView>
-
-
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -147,8 +145,8 @@
                 android:layout_height="50dp"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="15dp"
-                android:src="@drawable/dash_profile"
-                app:civ_border_color="#DFDADA"
+                android:src="@drawable/ic_baseline_account_circle_24"
+                app:civ_border_color="@color/white"
                 app:civ_border_width="2dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/like_text"
@@ -166,17 +164,6 @@
                 app:layout_constraintBottom_toBottomOf="@+id/channelImg"
                 app:layout_constraintStart_toEndOf="@+id/channelImg"
                 app:layout_constraintTop_toTopOf="@+id/channelImg" />
-
-            <TextView
-                android:id="@+id/textView8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:padding="3dp"
-                android:text="No. follow"
-                app:layout_constraintBottom_toBottomOf="@+id/channelName"
-                app:layout_constraintStart_toEndOf="@+id/channelName"
-                app:layout_constraintTop_toTopOf="@+id/channelName" />
 
             <Button
                 android:id="@+id/ratingBtn"
@@ -196,14 +183,14 @@
 
             <ImageView
                 android:id="@+id/comment_img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="43dp"
+                android:layout_height="43dp"
                 android:layout_marginStart="32dp"
                 android:padding="10dp"
                 app:layout_constraintBottom_toTopOf="@+id/textView21"
                 app:layout_constraintStart_toEndOf="@+id/btnDownload"
                 app:layout_constraintTop_toTopOf="@+id/btnDownload"
-                app:srcCompat="@drawable/ic_baseline_add_comment_24" />
+                app:srcCompat="@drawable/comment_bold" />
 
             <TextView
                 android:id="@+id/textView5"

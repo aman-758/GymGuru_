@@ -9,6 +9,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -41,7 +43,7 @@ public class HomeFragment extends Fragment{
     Boolean dislikeChecker = false;
     Boolean followChecker = false;
     String title;
-
+    private Animation videoAnim;
 
 
     @Override
@@ -54,8 +56,11 @@ public class HomeFragment extends Fragment{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         bind = FragmentHomeBinding.bind(view);
+        //code for animation
+        videoAnim = AnimationUtils.loadAnimation(getActivity(),R.anim.dash_sidetext);
+        //set animation on element
+        bind.videoAnim.setAnimation(videoAnim);
 
         bind.recyclerviewVideo.setHasFixedSize(true);
 
@@ -66,20 +71,17 @@ public class HomeFragment extends Fragment{
         likesreference = database.getReference("video_likes");
         dislikesreference = database.getReference("video_dislikes");
         followsreference = database.getReference("Followers");
+
     }
-
-
     //This is for search text
     /*private void firebaseSearch(String searchtext){
         String query = searchtext.toLowerCase();
         Query firebaseQuery = database.getReference().orderByChild("search").startAt(query).endAt(query + "\uf8ff");
     }*/
-
-
     @Override
     public void onStart() {
         super.onStart();
-        FirebaseRecyclerAdapter<UploadMember, VideoHolder /*RegistrationModel*/> firebaseRecyclerAdapter =
+        FirebaseRecyclerAdapter<UploadMember, VideoHolder> firebaseRecyclerAdapter =
                 new FirebaseRecyclerAdapter<UploadMember, VideoHolder /*RegistrationModel*/>(
                         UploadMember.class,
                         //RegistrationModel.class,
@@ -91,12 +93,11 @@ public class HomeFragment extends Fragment{
 
 
                     @Override
-                    protected void populateViewHolder(VideoHolder videoHolder, UploadMember model /*RegistrationModel registrationModel*/, int position) {
+                    protected void populateViewHolder(VideoHolder videoHolder, UploadMember model, int position) {
 
                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                         String currentUserId = user.getUid();
                         final String postkey = getRef(position).getKey(); //It will currently get the key of the post
-
 
                         Log.d("Message", model.getUrl());
                         videoHolder.setOnClickListener(new VideoHolder.Clicklistener() {
@@ -111,9 +112,10 @@ public class HomeFragment extends Fragment{
                                 showDeleteDialogName(model.title);
                             }
                         });
-                        videoHolder.setVideo(requireActivity().getApplication(), model, /*registrationModel,*/ position);
+                        videoHolder.setVideo(requireActivity().getApplication(), model, position);
                         String videoId = this.getRef(position).getKey();
-                        videoHolder.initui(getActivity(), model, /*registrationModel,*/ position, videoId,getChildFragmentManager());
+
+                        videoHolder.initui(getActivity(), model, position, videoId,getChildFragmentManager());
 
                         videoHolder.setLikesButtonStatus(postkey);
                         videoHolder.likeButton.setOnClickListener(v -> {
@@ -172,13 +174,17 @@ public class HomeFragment extends Fragment{
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if(followChecker.equals(true)){
-                                        if(snapshot.child(postkey).hasChild(currentUserId)){
-                                            followsreference.child(postkey).child(currentUserId).removeValue(); //User already follows the trainer so they could not again
-                                            followChecker = false;
-                                        }else{
-                                            followsreference.child(postkey).child(currentUserId).setValue(true); //user follows a particular trainer only at once
-                                            followChecker = false;
-                                        }
+                                        reference.child(postkey).get().addOnSuccessListener(dataSnapshot -> {
+                                           UploadMember model = dataSnapshot.getValue(UploadMember.class);
+                                            if(snapshot.child(model.uploaderId).hasChild(currentUserId)){
+                                                followsreference.child(model.uploaderId).child(currentUserId).removeValue(); //User already follows the trainer so they could not again
+                                                followChecker = false;
+                                            }else{
+                                                followsreference.child(model.uploaderId).child(currentUserId).setValue(true); //user follows a particular trainer only at once
+                                                followChecker = false;
+                                            }
+                                        });
+
                                     }
                                 }
 
