@@ -28,7 +28,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 
@@ -85,7 +84,7 @@ public class EditProfileFragment extends Fragment {
 
         fileRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
             fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                Picasso.get().load(uri).into(bind.changeProfileImg);
+                Glide.with(getActivity()).load(uri).into(bind.changeProfileImg);
                 Snackbar.make(bind.getRoot(), "Image uploaded successfully", BaseTransientBottomBar.LENGTH_LONG).show();
                 bind.progressBar.setVisibility(View.GONE);
 

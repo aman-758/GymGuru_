@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +25,10 @@ public class ForgotFragment extends Fragment {
 
     private FragmentForgotBinding bind;
     private FirebaseAuth auth;
+    private Animation forgotAnim, forgotlogoAnim, forgotImgAnim;
+    private Animation animationEditText;
+    private Animation forgotButtin;
+    private Animation forgotButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,6 +43,19 @@ public class ForgotFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable  Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         bind = FragmentForgotBinding.bind(view);
+        //code for animation
+        forgotAnim = AnimationUtils.loadAnimation(getActivity(),R.anim.slide_down);
+        forgotImgAnim = AnimationUtils.loadAnimation(getActivity(),R.anim.sidelogo_anim);
+        forgotlogoAnim = AnimationUtils.loadAnimation(getActivity(),R.anim.slide_up);
+        animationEditText = AnimationUtils.loadAnimation(getActivity(),R.anim.slide_up);
+        forgotButton = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_up);
+        //set animation on element
+        bind.forgotShow.setAnimation(forgotAnim);
+        bind.slideImg.setAnimation(forgotImgAnim);
+        bind.forgotLogoShow.setAnimation(forgotlogoAnim);
+        bind.forgotEmail.setAnimation(animationEditText);
+        bind.cardForgot.setAnimation(forgotButton);
+
         bind.cardForgot.setOnClickListener(v -> {
             resetForgot();
         });

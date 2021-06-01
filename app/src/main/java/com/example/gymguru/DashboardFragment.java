@@ -83,8 +83,6 @@ public class DashboardFragment extends Fragment {
                             //Snackbar.make(bind.getRoot(),e.getMessage(),BaseTransientBottomBar.LENGTH_LONG).show();
                         }
                     });
-
-
                 }
 
                 @Override

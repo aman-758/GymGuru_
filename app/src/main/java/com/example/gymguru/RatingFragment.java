@@ -12,6 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.gymguru.databinding.RatingFragmentBinding;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -22,7 +24,12 @@ public class RatingFragment extends DialogFragment {
     private RatingFragmentBinding bind;
     private String videoId;
     private String uid;
-    private float rating = 0;
+    float rating;
+    private DatabaseReference reference;
+    private FirebaseUser user;
+    long averagerating = 0;
+
+
     @NonNull
 
     @Override
@@ -42,6 +49,20 @@ public class RatingFragment extends DialogFragment {
         bind = RatingFragmentBinding.bind(view);
 
 
+        reference = FirebaseDatabase.getInstance().getReference("videos").child("rating");
+
+        reference.get().addOnSuccessListener(dataSnapshot -> {
+            long count = dataSnapshot.getChildrenCount(); // count = 2
+            float totalrating = 0;
+            for(DataSnapshot child : dataSnapshot.getChildren()){
+                int rating = (int)child.child("rating").getValue(); // rate = 4,4,5,3,3,4
+                totalrating += rating; // total rating = 23
+            }
+            averagerating = (long) (totalrating/count); // average rating = 23/6
+            bind.ratingText.setText(String.valueOf(averagerating)); // average rating = 3.8
+
+        });
+
         bind.btnSubmit.setOnClickListener(v -> {
             DatabaseReference push = FirebaseDatabase.getInstance().getReference("videos").child(videoId).child("ratings").push();
             HashMap<String,Object> data = new HashMap<>();
@@ -55,13 +76,13 @@ public class RatingFragment extends DialogFragment {
         });
 
     }
-        //Setters
-        public void setVideoId(String videoId){
-            this.videoId = videoId;
-        }
-
-        public void setUserId(String uid){
-            this.uid = uid;
-        }
+    //Setters
+    public void setVideoId(String videoId){
+        this.videoId = videoId;
     }
+
+    public void setUserId(String uid){
+        this.uid = uid;
+    }
+}
 

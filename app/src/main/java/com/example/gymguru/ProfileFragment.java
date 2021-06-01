@@ -1,28 +1,41 @@
 package com.example.gymguru;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.bumptech.glide.Glide;
 import com.example.gymguru.databinding.FragmentProfileBinding;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class ProfileFragment extends Fragment {
     private FragmentProfileBinding bind;
-    private DatabaseReference reference;
+    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    private DatabaseReference databaseReference = firebaseDatabase.getReference();
+    private DatabaseReference reference = databaseReference.child("Users");
     private String userId;
     private FirebaseAuth mAuth;
+    private FirebaseUser user;
     Animation profileAnim;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -39,6 +52,28 @@ public class ProfileFragment extends Fragment {
         profileAnim = AnimationUtils.loadAnimation(getActivity(),R.anim.slide_down);
         //set animation on elements
         bind.profileAnim.setAnimation(profileAnim);
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                FirebaseDatabase.getInstance().getReference("Users").child(mAuth.getCurrentUser().getUid()).child("imageUrl").get().addOnSuccessListener(dataSnapshot -> {
+                    try {
+                        String url = dataSnapshot.getValue().toString();
+                        Glide.with(getActivity()).load(url).into(bind.img);
+                        Log.d("imageUrl",url);
+                    }
+                    catch (Exception e){
+                        // Handle the error
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         bind.editProfile.setOnClickListener(v -> {
             NavHostFragment.findNavController(ProfileFragment.this).navigate(R.id.action_profileFragment_to_editProfileFragment);

@@ -90,15 +90,15 @@ public class VideoHolder extends RecyclerView.ViewHolder {
 
     // This is the function where i control all the function of row.xml
     public void initui(Context ctx, UploadMember model, /*RegistrationModel registrationModel,*/ int position, String videoId, FragmentManager fm){
-         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-         auth = FirebaseAuth.getInstance();
-         database = FirebaseDatabase.getInstance();
-         users = database.getReference("Users");
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        auth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+        users = database.getReference("Users");
 
-         trainerList = new ArrayList<>();
+        trainerList = new ArrayList<>();
         //Rating System
-         rating = mView.findViewById(R.id.ratingBtn);
-         rating.setOnClickListener(v ->  {
+        rating = mView.findViewById(R.id.ratingBtn);
+        rating.setOnClickListener(v ->  {
             RatingFragment rating = new RatingFragment();
             rating.setVideoId(videoId);
             rating.setUserId(uid);
@@ -330,6 +330,7 @@ public class VideoHolder extends RecyclerView.ViewHolder {
         followButton = mView.findViewById(R.id.btnFollow);
         followsdisplay = mView.findViewById(R.id.followText);
         followsref = FirebaseDatabase.getInstance().getReference("Followers");
+        DatabaseReference reference = database.getReference("videos");
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         String userId = user.getUid();
@@ -339,15 +340,19 @@ public class VideoHolder extends RecyclerView.ViewHolder {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                if(snapshot.child(postkey).hasChild(userId)){
-                    followCount = (int)snapshot.child(postkey).getChildrenCount();
-                    followButton.setImageResource(R.drawable.ic_baseline_person_add_alt_1_24);
-                    followsdisplay.setText(Integer.toString(followCount)+follows); //It is for counting the follows
-                }else{
-                    followCount = (int)snapshot.child(postkey).getChildrenCount();
-                    followButton.setImageResource(R.drawable.ic_outline_person_add_alt_1_24);
-                    followsdisplay.setText(Integer.toString(followCount)+follows); //It is for simply take back the follow, means user don't want to follow
-                }
+                reference.child(postkey).get().addOnSuccessListener(dataSnapshot -> { //Here i got uploader id from the postkey
+                    UploadMember model = dataSnapshot.getValue(UploadMember.class);
+                    if(snapshot.child(model.uploaderId).hasChild(userId)){
+                        followCount = (int)snapshot.child(model.uploaderId).getChildrenCount();
+                        followButton.setImageResource(R.drawable.ic_baseline_person_add_alt_1_24);
+                        followsdisplay.setText(Integer.toString(followCount)+follows); //It is for counting the follows
+                    }else{
+                        followCount = (int)snapshot.child(model.uploaderId).getChildrenCount();
+                        followButton.setImageResource(R.drawable.ic_outline_person_add_alt_1_24);
+                        followsdisplay.setText(Integer.toString(followCount)+follows); //It is for simply take back the follow, means user don't want to follow
+                    }
+                });
+
             }
 
             @Override

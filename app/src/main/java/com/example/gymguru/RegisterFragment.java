@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,7 +25,8 @@ public class RegisterFragment extends Fragment {
 
     private FirebaseAuth auth;
     private FragmentRegisterBinding bind;
-
+    private Animation registerLogoAnim;
+    private Animation scrollAnim;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,7 +41,15 @@ public class RegisterFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         bind = FragmentRegisterBinding.bind(view);
-        bind.btnReg.setOnClickListener(v -> {
+
+        //code for animation
+        registerLogoAnim = AnimationUtils.loadAnimation(getActivity(),R.anim.slide_down);
+        scrollAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_up);
+        //set animation on element
+        bind.registerImgAnim.setAnimation(registerLogoAnim);
+        bind.scrollAnim.setAnimation(scrollAnim);
+
+                bind.btnReg.setOnClickListener(v -> {
 
             String username = bind.editName.getText().toString();
             String email = bind.editUemail.getText().toString();

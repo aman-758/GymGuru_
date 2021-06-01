@@ -175,12 +175,14 @@ public class HomeFragment extends Fragment{
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if(followChecker.equals(true)){
                                         reference.child(postkey).get().addOnSuccessListener(dataSnapshot -> {
-                                           UploadMember model = dataSnapshot.getValue(UploadMember.class);
+                                            UploadMember model = dataSnapshot.getValue(UploadMember.class);
                                             if(snapshot.child(model.uploaderId).hasChild(currentUserId)){
                                                 followsreference.child(model.uploaderId).child(currentUserId).removeValue(); //User already follows the trainer so they could not again
+                                                Toast.makeText(getActivity(), "Removed from Follow List", Toast.LENGTH_SHORT).show();
                                                 followChecker = false;
                                             }else{
-                                                followsreference.child(model.uploaderId).child(currentUserId).setValue(true); //user follows a particular trainer only at once
+                                                followsreference.child(model.uploaderId).child(currentUserId).setValue(true);//user follows a particular trainer only at once
+                                                Toast.makeText(getActivity(), "Added to Follow List", Toast.LENGTH_SHORT).show();
                                                 followChecker = false;
                                             }
                                         });
@@ -194,6 +196,7 @@ public class HomeFragment extends Fragment{
                                 }
                             });
                         });
+
                         videoHolder.comment.setOnClickListener(v -> {
 
                             HomeFragmentDirections.ActionHomeFragmentToCommentFragment dir = HomeFragmentDirections.actionHomeFragmentToCommentFragment(postkey);
@@ -260,7 +263,7 @@ public class HomeFragment extends Fragment{
 
     private void processSearch(String query) {
         //Code does not run due to the missing of FirebaseRecyclerOptions
-        
+
     }
 
 
