@@ -69,6 +69,7 @@ public class DashboardFragment extends Fragment {
         bind.dashAnim.setAnimation(welcomeAnim);
         bind.animConstr.setAnimation(startAnim);
 
+
         if (auth.getCurrentUser() != null) {
             first.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -76,7 +77,7 @@ public class DashboardFragment extends Fragment {
                     FirebaseDatabase.getInstance().getReference("Users").child(auth.getCurrentUser().getUid()).child("imageUrl").get().addOnSuccessListener(dataSnapshot -> {
                         try {
                             String url = dataSnapshot.getValue().toString();
-                            Glide.with(getActivity()).load(url).into(bind.dpImg);
+                            Glide.with(getActivity()).load(url).centerCrop().placeholder(R.drawable.ic_baseline_account_circle_24).into(bind.dpImg);
                             Log.d("imageUrl", url);
 
                         } catch (Exception e) {

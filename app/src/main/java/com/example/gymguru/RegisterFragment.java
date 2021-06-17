@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,7 +18,7 @@ import com.example.gymguru.databinding.FragmentRegisterBinding;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
 
@@ -34,6 +35,7 @@ public class RegisterFragment extends Fragment {
         // Inflate the layout for this fragment
         auth = FirebaseAuth.getInstance();
 
+
         return inflater.inflate(R.layout.fragment_register, container, false);
     }
 
@@ -41,53 +43,122 @@ public class RegisterFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         bind = FragmentRegisterBinding.bind(view);
-
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         //code for animation
-        registerLogoAnim = AnimationUtils.loadAnimation(getActivity(),R.anim.slide_down);
+        registerLogoAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_down);
         scrollAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_up);
         //set animation on element
         bind.registerImgAnim.setAnimation(registerLogoAnim);
         bind.scrollAnim.setAnimation(scrollAnim);
 
-                bind.btnReg.setOnClickListener(v -> {
+        bind.userSwch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if(isChecked){
+                Toast.makeText(getActivity(), "Gym Trainer", Toast.LENGTH_SHORT).show();
+                bind.editExperience.setVisibility(View.VISIBLE);
+                bind.channelName.setVisibility(View.VISIBLE);
+            }else{
+                Toast.makeText(getActivity(), "Viewer", Toast.LENGTH_SHORT).show();
+                bind.editExperience.setVisibility(View.GONE);
+                bind.channelName.setVisibility(View.GONE);
+            }
+        });
+
+        bind.btnReg.setOnClickListener(v -> {
 
             String username = bind.editName.getText().toString();
             String email = bind.editUemail.getText().toString();
             String password = bind.editUpass.getText().toString();
-            String cPass = bind.cPass.getText().toString();
+            String cPass = bind.Cpass.getText().toString();
             String age = bind.editAge.getText().toString();
             String experience = bind.editExperience.getText().toString();
             String channelName = bind.channelName.getText().toString();
             String genderType = "";
             String userType = "Viewer";
             bind.progReg.setVisibility(View.VISIBLE);
-            if(bind.radioMale.isChecked()){
+            if (bind.radioMale.isChecked()) {
                 genderType = "Male";
             }
-            if(bind.radioFemale.isChecked()){
+            if (bind.radioFemale.isChecked()) {
                 genderType = "Female";
             }
-            if(bind.userSwch.isChecked()){
+            if (bind.userSwch.isChecked()) {
                 userType = "Gym Trainer";
 
             }
-            if (!username.trim().isEmpty()) {
-                if (!age.trim().isEmpty()&&age.length()<=2) {
-                    if (email.length() >= 10) {
-                        if (!experience.trim().isEmpty()) {
-                            if(!channelName.isEmpty()){
+
+            if(userType.equals("Gym Trainer")) {
+                registeruser(username, email, password, cPass, age, experience, channelName, genderType, userType);
+            }
+            else{
+                registeruser(username, email, password, cPass, age, genderType, userType);
+            }
+        });
+    }
+    private void registeruser(String username, String email, String password, String cPass, String age, String genderType, String userType) {
+        if (!username.trim().isEmpty()) {
+            if (!age.trim().isEmpty() && age.length() <= 2) {
+                if (email.length() >= 10) {
+                        if (password.length() >= 8) {
+                            if (cPass.equals(password)) {
+                                String finalUserType = userType;
+                                String finalGenderType = genderType;
+                                auth.createUserWithEmailAndPassword(email, password)
+                                        .addOnSuccessListener(authResult -> {
+                                            String uid = authResult.getUser().getUid();
+                                            RegistrationModel registrationModel = new RegistrationModel(uid, username, age, email, "", "", finalGenderType, finalUserType, "");
+                                            updateUserProfile(registrationModel);
+                                            })
+                                        .addOnFailureListener(e -> {
+                                            Snackbar.make(bind.getRoot(), e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
+                                            updateUserProfile(null);
+                                            bind.progReg.setVisibility(View.GONE);
+                                        });
+                                } else {
+                                    bind.Cpass.setError("Password do not match!");
+                                    bind.Cpass.requestFocus();
+                                    updateUserProfile(null);
+                                    bind.progReg.setVisibility(View.GONE);
+                                }
+                            } else {
+                                bind.editUpass.setError("Invalid Password!");
+                                bind.editUpass.requestFocus();
+                                updateUserProfile(null);
+                                bind.progReg.setVisibility(View.GONE);
+                            }
+                } else {
+                    bind.editUemail.setError("Invalid Email!");
+                    bind.editUemail.requestFocus();
+                    updateUserProfile(null);
+                    bind.progReg.setVisibility(View.GONE);
+                }
+            } else {
+                bind.editAge.setError("Age must be provided!");
+                bind.editAge.requestFocus();
+                updateUserProfile(null);
+                bind.progReg.setVisibility(View.GONE);
+            }
+        } else {
+            bind.editName.setError("Name must be provided!");
+            bind.editName.requestFocus();
+            updateUserProfile(null);
+            bind.progReg.setVisibility(View.GONE);
+        }
+    }
+
+    private void registeruser(String username, String email, String password, String cPass, String age, String experience, String channelName, String genderType, String userType) {
+        if (!username.trim().isEmpty()) {
+            if (!age.trim().isEmpty() && age.length() <= 2) {
+                if (email.length() >= 10) {
+                    if (!experience.trim().isEmpty()) {
+                        if (!channelName.isEmpty()) {
                             if (password.length() >= 8) {
                                 if (cPass.equals(password)) {
-
                                     String finalUserType = userType;
                                     String finalGenderType = genderType;
                                     auth.createUserWithEmailAndPassword(email, password)
                                             .addOnSuccessListener(authResult -> {
                                                 String uid = authResult.getUser().getUid();
-                                                RegistrationModel registrationModel = new RegistrationModel(uid, username, age, email, experience, channelName, finalGenderType, finalUserType,"");
-
-                                                //FirebaseUser user = authResult.getUser();
-                                                UserProfileChangeRequest req = new UserProfileChangeRequest.Builder().setDisplayName(username).build();
+                                                RegistrationModel registrationModel = new RegistrationModel(uid, username, age, email, experience, channelName, finalGenderType, finalUserType, "");
                                                 updateUserProfile(registrationModel);
                                             })
                                             .addOnFailureListener(e -> {
@@ -96,59 +167,57 @@ public class RegisterFragment extends Fragment {
                                                 bind.progReg.setVisibility(View.GONE);
                                             });
                                 } else {
-                                    bind.cPass.setError("Password do not match!");
-                                    bind.cPass.requestFocus();
+                                    bind.Cpass.setError("Password do not match!");
+                                    bind.Cpass.requestFocus();
                                     updateUserProfile(null);
                                     bind.progReg.setVisibility(View.GONE);
                                 }
-                            } else{
+                            } else {
                                 bind.editUpass.setError("Invalid Password!");
                                 bind.editUpass.requestFocus();
                                 updateUserProfile(null);
                                 bind.progReg.setVisibility(View.GONE);
                             }
-                            } else {
-                                bind.channelName.setError("Channel Name must be provided!");
-                                bind.channelName.requestFocus();
-                                updateUserProfile(null);
-                                bind.progReg.setVisibility(View.GONE);
-                            }
+
                         } else {
-                            bind.editExperience.setError("Profession must be provided!");
-                            bind.editExperience.requestFocus();
-                            updateUserProfile(null);
+                            bind.channelName.setError("Channel Name must be provided!");
+                            bind.channelName.requestFocus();
                             bind.progReg.setVisibility(View.GONE);
                         }
-                    } else{
-                        bind.editUemail.setError("Invalid Email!");
-                        bind.editUemail.requestFocus();
+                    } else {
+                        bind.editExperience.setError("Profession must be provided!");
+                        bind.editExperience.requestFocus();
                         updateUserProfile(null);
                         bind.progReg.setVisibility(View.GONE);
                     }
                 } else {
-                    bind.editAge.setError("Age must be provided!");
-                    bind.editAge.requestFocus();
+                    bind.editUemail.setError("Invalid Email!");
+                    bind.editUemail.requestFocus();
                     updateUserProfile(null);
                     bind.progReg.setVisibility(View.GONE);
                 }
-            } else{
-                bind.editName.setError("Name must be provided!");
-                bind.editName.requestFocus();
+            } else {
+                bind.editAge.setError("Age must be provided!");
+                bind.editAge.requestFocus();
                 updateUserProfile(null);
                 bind.progReg.setVisibility(View.GONE);
             }
-
-        });
-
+        } else {
+            bind.editName.setError("Name must be provided!");
+            bind.editName.requestFocus();
+            updateUserProfile(null);
+            bind.progReg.setVisibility(View.GONE);
+        }
     }
 
-    private void showError(String message){
+    private void showError(String message) {
         new AlertDialog.Builder(getActivity()).setTitle("Error").setMessage(message).setPositiveButton("OK",
-                (dialog, which) -> { }).show();
+                (dialog, which) -> {
+                }).show();
     }
 
     private void updateUserProfile(RegistrationModel registrationModel) {
-        if(registrationModel != null) {
+        if (registrationModel != null) {
             FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser()
                     .getUid()).setValue(registrationModel).addOnSuccessListener(aVoid -> {
 
@@ -158,15 +227,16 @@ public class RegisterFragment extends Fragment {
                 showError(e.getMessage());
                 bind.progReg.setVisibility(View.GONE);
             });
+        }else{
+            Snackbar.make(bind.getRoot(),"Details Invalid!",BaseTransientBottomBar.LENGTH_LONG).show();
         }
-
     }
-    private void showSuccess(String message){
+
+
+    private void showSuccess(String message) {
         new AlertDialog.Builder(getActivity()).setTitle("Success").setMessage(message).setPositiveButton("Continue",
                 ((dialog, which) -> {
                     NavHostFragment.findNavController(this).navigate(R.id.action_registerFragment_to_dashboardFragment);
                 })).show();
     }
-
-
 }

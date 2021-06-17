@@ -95,12 +95,20 @@
         android:id="@+id/editProfileFragment"
         android:name="com.example.gymguru.EditProfileFragment"
         android:label="fragment_edit_profile"
-        tools:layout="@layout/fragment_edit_profile" />
+        tools:layout="@layout/fragment_edit_profile" >
+        <action
+            android:id="@+id/action_editProfileFragment_to_fullImageFragment"
+            app:destination="@id/fullImageFragment" />
+    </fragment>
     <fragment
         android:id="@+id/galleryFragment"
         android:name="com.example.gymguru.GalleryFragment"
         android:label="fragment_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        tools:layout="@layout/fragment_gallery" >
+        <action
+            android:id="@+id/action_galleryFragment_to_trainerVideos"
+            app:destination="@id/trainerVideos" />
+    </fragment>
     <fragment
         android:id="@+id/commentFragment"
         android:name="com.example.gymguru.CommentFragment"
@@ -115,4 +123,22 @@
         android:name="com.example.gymguru.LiveFragment"
         android:label="fragment_live"
         tools:layout="@layout/fragment_live" />
+    <fragment
+        android:id="@+id/fullImageFragment"
+        android:name="com.example.gymguru.FullImageFragment"
+        android:label="fragment_full_image"
+        tools:layout="@layout/fragment_full_image" >
+        <action
+            android:id="@+id/action_fullImageFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/trainerVideos"
+        android:name="com.example.gymguru.TrainerVideos"
+        android:label="fragment_trainer_videos"
+        tools:layout="@layout/fragment_trainer_videos" >
+        <argument
+            android:name="uid"
+            app:argType="string" />
+    </fragment>
 </navigation>

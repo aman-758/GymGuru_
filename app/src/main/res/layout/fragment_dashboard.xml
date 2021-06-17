@@ -48,7 +48,7 @@
             android:id="@+id/dpImg"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:layout_marginEnd="15dp"
             android:src="@drawable/ic_baseline_account_circle_24"
             app:civ_border_color="@color/purple_500"
@@ -60,35 +60,30 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="15dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="26dp"
+            android:layout_marginEnd="20dp"
             android:layout_marginBottom="15dp"
             android:background="@drawable/white_rectangle_bg"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/dpImg">
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@null"
+                android:background="@color/white"
+                android:fontFamily="@font/coiny"
                 android:gravity="center"
-                android:hint="START YOUR JOURNEY"
                 android:imeOptions="actionSearch"
                 android:importantForAutofill="no"
-                android:inputType="text"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp"
+                android:text="Start Your Journey"
                 android:textAlignment="center"
-                android:textColor="#ff5c8d"
-                android:textSize="20sp" />
+                android:textSize="25sp" />
 
-            <ImageView
-                android:id="@+id/registerImgAnim"
-                android:layout_width="40dp"
-                android:layout_height="40dp" />
         </LinearLayout>
 
 
@@ -99,10 +94,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="1dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="30dp"
+        android:foregroundGravity="clip_horizontal|center_horizontal|fill"
         app:columnCount="2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -28,6 +28,7 @@ public class GalleryFragment extends Fragment {
     private FragmentGalleryBinding bind;
     private FirebaseAuth mAuth;
     FirebaseDatabase database;
+    DatabaseReference reference;
     private DatabaseReference users;
     ArrayList<RegistrationModel> trainerList, followList;
     private Animation galleryAnim;
@@ -56,7 +57,7 @@ public class GalleryFragment extends Fragment {
         bind.recyclerViewImg.setHasFixedSize(true);
         bind.recyclerViewImg.setLayoutManager(new LinearLayoutManager(getActivity()));
         trainerList = new ArrayList<>();
-        GalleryAdapter galleryAdapter = new GalleryAdapter(getActivity(),trainerList);
+        GalleryAdapter galleryAdapter = new GalleryAdapter(getActivity(),trainerList,this);
         bind.recyclerViewImg.setAdapter(galleryAdapter);
         users.get().addOnSuccessListener(dataSnapshot -> {
             trainerList.clear();
@@ -71,6 +72,9 @@ public class GalleryFragment extends Fragment {
             }
         }).addOnFailureListener(e -> {
             Snackbar.make(bind.getRoot(), e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
+        });
+        bind.recyclerViewImg.setOnClickListener(v -> {
+
         });
     }
 }

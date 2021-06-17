@@ -1,13 +1,11 @@
 package com.example.gymguru;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -52,26 +50,34 @@ public class ProfileFragment extends Fragment {
         profileAnim = AnimationUtils.loadAnimation(getActivity(),R.anim.slide_down);
         //set animation on elements
         bind.profileAnim.setAnimation(profileAnim);
-        user = FirebaseAuth.getInstance().getCurrentUser();
 
-        reference.addValueEventListener(new ValueEventListener() {
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        userId = user.getUid();
+
+        reference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                FirebaseDatabase.getInstance().getReference("Users").child(mAuth.getCurrentUser().getUid()).child("imageUrl").get().addOnSuccessListener(dataSnapshot -> {
-                    try {
-                        String url = dataSnapshot.getValue().toString();
-                        Glide.with(getActivity()).load(url).into(bind.img);
-                        Log.d("imageUrl",url);
+                RegistrationModel registrationModel = snapshot.getValue(RegistrationModel.class);
+                if(registrationModel!=null) {
+                    String username = registrationModel.username;
+                    String usertype = registrationModel.userType;
+                    if(registrationModel.imageUrl!=null) {
+                        Glide.with(getActivity()).load(registrationModel.getImageUrl())
+                                .centerCrop().placeholder(R.drawable.ic_baseline_account_circle_24).into(bind.img);
                     }
-                    catch (Exception e){
-                        // Handle the error
+
+                    bind.profileUser.setText(username);
+                    if(registrationModel.channelName!=null) {
+                        bind.profileUserType.setText(usertype);
+                    }else{
+                        bind.profileUserType.setText("Viewer");
                     }
-                });
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                //handle the error
             }
         });
 

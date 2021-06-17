@@ -14,6 +14,7 @@ import android.view.animation.AnimationUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
 import com.example.gymguru.databinding.FragmentEditProfileBinding;
@@ -57,7 +58,8 @@ public class EditProfileFragment extends Fragment {
         // I am doing this because every user have their own profile image.
         StorageReference profileRef = storageReference.child("Users/" + fAuth.getCurrentUser().getUid() + "/Profiles");
         profileRef.getDownloadUrl().addOnSuccessListener(uri -> {
-            Glide.with(getActivity()).load(uri).into(bind.changeProfileImg);
+            Glide.with(getActivity()).load(uri).centerCrop()
+                    .placeholder(R.drawable.ic_baseline_account_circle_24).into(bind.changeProfileImg);
         });
         return inflater.inflate(R.layout.fragment_edit_profile, container, false);
 
@@ -144,8 +146,6 @@ public class EditProfileFragment extends Fragment {
                     }
 
                 }
-
-
             }
 
             @Override
@@ -155,15 +155,31 @@ public class EditProfileFragment extends Fragment {
         });
 
         bind.btnSaveChanges.setOnClickListener(v -> {
-            String name = bind.fireName.getText().toString();
-            String experience = bind.fireExperience.getText().toString();
-            String channelName = bind.editChannel.getText().toString();
-            //Boolean userType = bind.fireSwitch.getShowText();
-            //String email = bind.fireEmail.getText().toString();
-            String age = bind.fireAge.getText().toString();
+            reference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    RegistrationModel registrationModel = snapshot.getValue(RegistrationModel.class);
 
-            updateData(name, experience, age, channelName /*email, userType*/);
-            bind.progressBar.setVisibility(View.VISIBLE);
+                    String name = bind.fireName.getText().toString();
+                    String experience = bind.fireExperience.getText().toString();
+                    String channelName = bind.editChannel.getText().toString();
+                    String age = bind.fireAge.getText().toString();
+                    if(registrationModel.userType.equals("Gym Trainer")) {
+                        updateData(name, experience, age, channelName);
+                        bind.progressBar.setVisibility(View.VISIBLE);
+                    }else{
+                        updateData(name,age);
+                        bind.progressBar.setVisibility(View.VISIBLE);
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
         });
 
         // This is the add profile segment
@@ -174,10 +190,16 @@ public class EditProfileFragment extends Fragment {
             bind.progressBar.setVisibility(View.VISIBLE);
         });
 
+        bind.changeProfileImg.setOnClickListener(v -> {
+            NavHostFragment.findNavController(EditProfileFragment.this).navigate(R.id.action_editProfileFragment_to_fullImageFragment);
+        });
+        
     }
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //This is the function of update user's data
+
     private void updateData(String name, String experience, String age, String channelName/*String email /*Boolean userType*/) {
         // Now creating hashmap to update the data
         HashMap User = new HashMap();
@@ -185,19 +207,42 @@ public class EditProfileFragment extends Fragment {
         User.put("experience", experience);
         User.put("channelName",channelName);
         User.put("age", age);
-        //User.put("UserType",userType);
-        //User.put("email",email);
 
         reference = FirebaseDatabase.getInstance().getReference("Users");
         // Now update the child of the Users
+
         reference.child(userId).updateChildren(User).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-
                 bind.fireName.setText(name);
                 bind.fireExperience.setText(experience);
                 bind.fireAge.setText(age);
                 bind.editChannel.setText(channelName);
                 //bind.fireEmail.setText(email);
+                Snackbar.make(bind.getRoot(), "Data successfully updated", BaseTransientBottomBar.LENGTH_LONG).show();
+                bind.progressBar.setVisibility(View.GONE);
+            } else {
+                Snackbar.make(bind.getRoot(), "Failed to update", BaseTransientBottomBar.LENGTH_LONG).show();
+                bind.progressBar.setVisibility(View.GONE);
+            }
+
+        });
+
+    }
+
+    private void updateData(String name, String age) {
+        // Now creating hashmap to update the data
+        HashMap User = new HashMap();
+        User.put("username", name);
+        User.put("age", age);
+
+        reference = FirebaseDatabase.getInstance().getReference("Users");
+        // Now update the child of the Users
+
+        reference.child(userId).updateChildren(User).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                bind.fireName.setText(name);
+                bind.fireAge.setText(age);
+
                 Snackbar.make(bind.getRoot(), "Data successfully updated", BaseTransientBottomBar.LENGTH_LONG).show();
                 bind.progressBar.setVisibility(View.GONE);
             } else {

@@ -1,5 +1,6 @@
 package com.example.gymguru;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.media.MediaMetadataRetriever;
@@ -18,23 +19,19 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.gymguru.databinding.FragmentUploadBinding;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -45,13 +42,10 @@ public class UploadFragment extends Fragment {
     private Uri videoUri;
     MediaController mediaController;
     private StorageReference storageReference;
-    private DatabaseReference databaseReference,users,viewer;
+    private DatabaseReference databaseReference,viewer;
     private FirebaseAuth mAuth;
     FirebaseDatabase database;
     private long duration;
-    Boolean checker = false;
-    private Animation uploadAnim;
-    private ArrayList<RegistrationModel> trainer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,44 +67,31 @@ public class UploadFragment extends Fragment {
         databaseReference = FirebaseDatabase.getInstance().getReference("videos");
 
         mAuth = FirebaseAuth.getInstance();
-        FirebaseUser users = FirebaseAuth.getInstance().getCurrentUser();
+
         database = FirebaseDatabase.getInstance();
         viewer = database.getReference("Users");
         bind = FragmentUploadBinding.bind(view);
 
         //code for animation
-        uploadAnim = AnimationUtils.loadAnimation(getActivity(),R.anim.slide_down);
+        Animation uploadAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_down);
         //set animation on element
         bind.uploadAnim.setAnimation(uploadAnim);
-        trainer = new ArrayList<>();
         bind.videoView.setMediaController(mediaController);
         mediaController.setAnchorView(bind.videoView);
         bind.videoView.start();
 
-        bind.chooseBtn.setOnClickListener(view1 -> {
-
-                viewer.child(mAuth.getCurrentUser().getUid()).get().addOnSuccessListener(dataSnapshot -> {
-                   RegistrationModel registrationModel = dataSnapshot.getValue(RegistrationModel.class);
-                   if(registrationModel.userType.equals("Gym Trainer")){
-                       ChooseVideo();
-                   }
-                });
-
-               /*for(DataSnapshot child : dataSnapshot.getChildren()){
-                   RegistrationModel registrationModel = child.getValue(RegistrationModel.class);
-                   if(registrationModel != null && registrationModel.userType.equals("Gym Trainer")){
-
-                       trainer.add(registrationModel);
-                       Log.d("Info",registrationModel.getUserType());
-                   }else{
-                       Snackbar.make(bind.getRoot(),"Viewer can't upload the video",BaseTransientBottomBar.LENGTH_LONG).show();
-                   }
-               }*/
-
-        });
-        bind.uploadBtn.setOnClickListener(v -> {
-            Uploadvideo();
-        });
+        bind.chooseBtn.setOnClickListener(view1 -> viewer.child(Objects.requireNonNull(mAuth.getCurrentUser()).getUid()).get().addOnSuccessListener(dataSnapshot -> {
+           RegistrationModel registrationModel = dataSnapshot.getValue(RegistrationModel.class);
+            if (registrationModel != null) {
+                if(registrationModel.userType.equals("Gym Trainer")){
+                    ChooseVideo();
+                }
+                else{
+                    Snackbar.make(bind.getRoot(),"Viewer can't upload the video",BaseTransientBottomBar.LENGTH_LONG).show();
+                }
+            }
+        }));
+        bind.uploadBtn.setOnClickListener(v -> Uploadvideo());
         
     }
 
@@ -125,8 +106,9 @@ public class UploadFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == PICK_VIDEO_REQUEST && resultCode == RESULT_OK
-        && data != null && data.getData() != null);
+                && data != null && data.getData() != null);
 
+        assert data != null;
         videoUri = data.getData();
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         retriever.setDataSource(getActivity(),videoUri);
@@ -144,36 +126,31 @@ public class UploadFragment extends Fragment {
     private void Uploadvideo(){
 
         bind.progUpload.setVisibility(View.VISIBLE);
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
         Date currentTime = Calendar.getInstance().getTime();
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yy hh:mm");
+        @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("dd-MM-yy hh:mm");
         String strDate = dateFormat.format(currentTime);
 
         if(videoUri != null){
             StorageReference reference = storageReference.child(System.currentTimeMillis()+
                     "."+getfileExt(videoUri));
 
-            reference.putFile(videoUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    bind.progUpload.setVisibility(View.GONE);
-                    taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(uri -> {
-                        Snackbar.make(bind.getRoot(), "Upload successful",BaseTransientBottomBar.LENGTH_SHORT).show();
-                        UploadMember uploadMember = new UploadMember(bind.videoName.getText().toString().trim(),uri.toString(),uid,strDate,duration);
-                        String upload = databaseReference.push().getKey();
-                        databaseReference.child(upload).setValue(uploadMember);
-                    });
+            reference.putFile(videoUri).addOnSuccessListener(taskSnapshot -> {
+                bind.progUpload.setVisibility(View.GONE);
+                Objects.requireNonNull(Objects.requireNonNull(taskSnapshot.getMetadata()).getReference()).getDownloadUrl().addOnSuccessListener(uri -> {
+                    Snackbar.make(bind.getRoot(), "Upload successful",BaseTransientBottomBar.LENGTH_SHORT).show();
+                    UploadMember uploadMember = new UploadMember(bind.videoName.getText().toString().trim(),uri.toString(),uid,strDate,duration);
+                    String upload = databaseReference.push().getKey();
+                    assert upload != null;
+                    databaseReference.child(upload).setValue(uploadMember);
+                });
 
 
 
-                }
             })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Snackbar.make(bind.getRoot(), "error"+ e.getMessage(), BaseTransientBottomBar.LENGTH_SHORT).show();
-                            bind.progUpload.setVisibility(View.GONE);
-                        }
+                    .addOnFailureListener(e -> {
+                        Snackbar.make(bind.getRoot(), "error"+ e.getMessage(), BaseTransientBottomBar.LENGTH_SHORT).show();
+                        bind.progUpload.setVisibility(View.GONE);
                     });
         } else{
             Snackbar.make(bind.getRoot(), "No file selected",BaseTransientBottomBar.LENGTH_SHORT).show();

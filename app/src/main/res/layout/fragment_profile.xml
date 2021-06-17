@@ -46,41 +46,44 @@
                 android:layout_width="65dp"
                 android:layout_height="65dp"
                 android:layout_marginStart="8dp"
+                android:src="@drawable/ic_baseline_account_circle_24"
                 app:civ_border_color="@color/white"
                 app:civ_border_width="2dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/ic_baseline_account_circle_24" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/profileUser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="20dp"
+                android:padding="4dp"
                 android:text="Username"
                 android:textAlignment="textStart"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/profileUserType"
+                app:layout_constraintBottom_toBottomOf="@+id/img"
                 app:layout_constraintStart_toEndOf="@+id/img"
                 app:layout_constraintTop_toTopOf="@+id/img" />
 
             <TextView
                 android:id="@+id/profileUserType"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="30dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginBottom="5dp"
+                android:padding="4dp"
                 android:text="Type"
                 android:textAlignment="textStart"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/profileUser"
-                app:layout_constraintStart_toStartOf="@+id/profileUser"
-                app:layout_constraintTop_toBottomOf="@+id/profileUser" />
+                app:layout_constraintStart_toEndOf="@+id/img"
+                app:layout_constraintTop_toBottomOf="@+id/profileUser"
+                app:layout_constraintVertical_bias="0.0" />
 
             <ImageView
                 android:id="@+id/editProfile"

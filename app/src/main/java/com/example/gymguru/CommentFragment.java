@@ -1,6 +1,7 @@
 package com.example.gymguru;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,7 @@ public class CommentFragment extends Fragment {
     FirebaseDatabase database;
     private Animation commentAnim;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -54,7 +56,7 @@ public class CommentFragment extends Fragment {
         bind = FragmentCommentBinding.bind(view);
 
         //code for animation
-        commentAnim = AnimationUtils.loadAnimation(getActivity(),R.anim.slide_down);
+        commentAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_down);
         //set animation on element
         bind.commentAnim.setAnimation(commentAnim);
 
@@ -71,7 +73,7 @@ public class CommentFragment extends Fragment {
         commentModels = new ArrayList<>();
         CommentAdapter commentAdapter = new CommentAdapter(getActivity(), commentModels);
         bind.commentRecview.setAdapter(commentAdapter);
-        commentref.get().addOnSuccessListener(dataSnapshot -> {
+        /*commentref.get().addOnSuccessListener(dataSnapshot -> {
             commentModels.clear();
             for (DataSnapshot child : dataSnapshot.getChildren()) {
                 CommentModel commentModel = child.getValue(CommentModel.class);
@@ -82,6 +84,31 @@ public class CommentFragment extends Fragment {
             }
         }).addOnFailureListener(e -> {
             Snackbar.make(bind.getRoot(), e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
+        });*/
+
+        commentref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                commentModels.clear();
+                for (DataSnapshot child : snapshot.getChildren()) {
+                    CommentModel commentModel = child.getValue(CommentModel.class);
+                    if (commentModel != null) {
+                        commentModels.add(commentModel);
+                        Log.d("Info", commentModel.getImageUrl());
+                        Log.d("Info", commentModel.getUsername());
+                        Log.d("Info", commentModel.getUsermsg());
+                        Log.d("Info", commentModel.getDate());
+                        Log.d("Info", commentModel.getTime());
+                    }
+                    bind.commentRecview.getAdapter().notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Snackbar.make(bind.getRoot(), error.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
+            }
+
         });
 
         bind.commentSubmit.setOnClickListener(v -> {
@@ -100,10 +127,9 @@ public class CommentFragment extends Fragment {
                     // Handle the error
                 }
             });
+
         });
-
     }
-
     private void processcomment(String username, String userimage) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String commentpost = bind.commentText.getText().toString();

@@ -8,6 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -18,10 +20,12 @@ import java.util.ArrayList;
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.MyViewHolder> {
     private  ArrayList<RegistrationModel> trainers;
     private  Context ctx;
+    Fragment fragment;
     FirebaseAuth auth;
-    public GalleryAdapter(Context ctx, ArrayList<RegistrationModel> trainers){
+    public GalleryAdapter(Context ctx, ArrayList<RegistrationModel> trainers, Fragment fragment){
         this.ctx = ctx;
         this.trainers = trainers;
+        this.fragment = fragment;
     }
     @Override
     public void onBindViewHolder(MyViewHolder viewHolder, int position) {
@@ -55,13 +59,19 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.MyViewHo
             img = itemView.findViewById(R.id.trainerImg);
             itemView.setOnClickListener(v -> {
                 int adapterPosition = getAdapterPosition();
-                //itemView.findNavController() user enter the particular trainer gallery
+                RegistrationModel registrationModel = trainers.get(adapterPosition);
+                //HomeFragmentDirections.ActionHomeFragmentToCommentFragment dir = HomeFragmentDirections.actionHomeFragmentToCommentFragment();
+                //NavHostFragment.findNavController(fragment).navigate(dir);
+
+                GalleryFragmentDirections.ActionGalleryFragmentToTrainerVideos dir = GalleryFragmentDirections.actionGalleryFragmentToTrainerVideos(registrationModel.uid);
+                NavHostFragment.findNavController(fragment).navigate(dir);
             });
         }
 
         public void bind(RegistrationModel registrationModel, int position) {
             trainer.setText(registrationModel.getChannelName());
-            Glide.with(ctx).load(registrationModel.getImageUrl()).into(img);
+            Glide.with(ctx).load(registrationModel.getImageUrl())
+                    .fitCenter().centerCrop().placeholder(R.drawable.ic_baseline_account_circle_24).into(img);
         }
     }
 }

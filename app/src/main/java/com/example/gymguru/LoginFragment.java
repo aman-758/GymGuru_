@@ -1,11 +1,13 @@
 package com.example.gymguru;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +26,7 @@ public class LoginFragment extends Fragment {
     private FirebaseAuth auth;
     private FragmentLoginBinding bind;
     private Animation showAnim, loginFace, showAnim1;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,8 +50,15 @@ public class LoginFragment extends Fragment {
         bind.showAnim1.setAnimation(showAnim1);
 
         bind.btnLogin.setOnClickListener(v -> {
+
             String email = bind.editEmail.getText().toString();
             String password = bind.editPassword.getText().toString();
+            InputMethodManager inputManager = (InputMethodManager)
+                    getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (inputManager != null ) {
+                inputManager.hideSoftInputFromWindow(view.getWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
+            }
             if(email.length() > 10)
             {
                 if(password.length() >= 8)
@@ -78,6 +88,7 @@ public class LoginFragment extends Fragment {
         bind.regUser.setOnClickListener(view1 -> {
             NavHostFragment.findNavController(this).navigate(R.id.action_loginFragment_to_registerFragment2);
         });
+
         bind.forgot.setOnClickListener(view2 -> {
             NavHostFragment.findNavController(this).navigate(R.id.action_loginFragment_to_forgotFragment);
         });

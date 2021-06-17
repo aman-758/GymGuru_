@@ -5,6 +5,7 @@ import android.app.Application;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -49,6 +50,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
@@ -61,6 +63,7 @@ public class VideoHolder extends RecyclerView.ViewHolder {
     private DatabaseReference users;
     View mView;
     Button rating;
+    TextView textRating;
     TextView timeText,channelName;
     PlayerView playerView;
     ProgressBar progressBar;
@@ -73,6 +76,7 @@ public class VideoHolder extends RecyclerView.ViewHolder {
     TextView likesdisplay, dislikesdisplay, followsdisplay;
     DatabaseReference likesref, dislikeref, followsref;
     int likesCount, dislikesCount, followCount;
+    float averagerating = 0;
 
     public VideoHolder( View itemView) {
         super(itemView);
@@ -89,19 +93,43 @@ public class VideoHolder extends RecyclerView.ViewHolder {
     }
 
     // This is the function where i control all the function of row.xml
-    public void initui(Context ctx, UploadMember model, /*RegistrationModel registrationModel,*/ int position, String videoId, FragmentManager fm){
+    public void initui(Context ctx, UploadMember model, int position, String videoId, FragmentManager fm){
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         users = database.getReference("Users");
 
         trainerList = new ArrayList<>();
+
         //Rating System
         rating = mView.findViewById(R.id.ratingBtn);
+        textRating = mView.findViewById(R.id.ratingText);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("videos").child(videoId).child("ratings");
+
+        reference.get().addOnSuccessListener(dataSnapshot -> {
+            long count = dataSnapshot.getChildrenCount(); // count = 2
+            float totalrating = 0;
+            for(DataSnapshot child : dataSnapshot.getChildren()){
+                double rating = Double.parseDouble(String.valueOf(child.child("rating").getValue())); // rate = 4,4,5,3,3,4
+                totalrating += rating; // total rating = 23
+            }
+            DecimalFormat df = new DecimalFormat();
+            df.setMaximumFractionDigits(2);
+
+            averagerating = (float) (totalrating/count); // average rating = 23/6
+            textRating.setText(df.format(averagerating));
+
+        });
+
         rating.setOnClickListener(v ->  {
+
             RatingFragment rating = new RatingFragment();
-            rating.setVideoId(videoId);
-            rating.setUserId(uid);
+            Bundle args = new Bundle();
+            args.putString("videoId",videoId);
+            args.putString("uid",uid);
+            args.putFloat("averagerating",averagerating);
+            rating.setArguments(args);
+
             rating.show (fm,"Rating");
 
         });
@@ -114,7 +142,8 @@ public class VideoHolder extends RecyclerView.ViewHolder {
         users.child(model.uploaderId).get().addOnSuccessListener(dataSnapshot -> {
             RegistrationModel registrationModel = dataSnapshot.getValue(RegistrationModel.class);
             if (registrationModel != null && registrationModel.userType.equals("Gym Trainer")) {
-                Glide.with(ctx).load(registrationModel.getImageUrl()).into(channelImg);
+                Glide.with(ctx).load(registrationModel.getImageUrl())
+                        .fitCenter().centerCrop().placeholder(R.drawable.ic_baseline_account_circle_24).into(channelImg);
                 channelName.setText(registrationModel.getChannelName());
                 trainerList.add(registrationModel);
                 Log.d("Info", registrationModel.getUserType());

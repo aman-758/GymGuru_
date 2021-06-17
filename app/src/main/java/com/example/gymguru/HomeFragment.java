@@ -37,6 +37,8 @@ import com.google.firebase.database.ValueEventListener;
 public class HomeFragment extends Fragment{
     private FragmentHomeBinding bind;
     FirebaseDatabase database;
+    FirebaseUser user;
+    FirebaseAuth auth;
     DatabaseReference reference;
     DatabaseReference databaseReference, likesreference, dislikesreference, followsreference;
     Boolean likeChecker = false;
@@ -66,6 +68,9 @@ public class HomeFragment extends Fragment{
 
         bind.recyclerviewVideo.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+
+                
+
         database = FirebaseDatabase.getInstance();
         reference = database.getReference("videos");
         likesreference = database.getReference("video_likes");
@@ -82,15 +87,13 @@ public class HomeFragment extends Fragment{
     public void onStart() {
         super.onStart();
         FirebaseRecyclerAdapter<UploadMember, VideoHolder> firebaseRecyclerAdapter =
-                new FirebaseRecyclerAdapter<UploadMember, VideoHolder /*RegistrationModel*/>(
+                new FirebaseRecyclerAdapter<UploadMember, VideoHolder>(
                         UploadMember.class,
-                        //RegistrationModel.class,
                         R.layout.row,
                         VideoHolder.class,
                         reference
 
                 ) {
-
 
                     @Override
                     protected void populateViewHolder(VideoHolder videoHolder, UploadMember model, int position) {
@@ -175,14 +178,12 @@ public class HomeFragment extends Fragment{
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if(followChecker.equals(true)){
                                         reference.child(postkey).get().addOnSuccessListener(dataSnapshot -> {
-                                            UploadMember model = dataSnapshot.getValue(UploadMember.class);
+                                           UploadMember model = dataSnapshot.getValue(UploadMember.class);
                                             if(snapshot.child(model.uploaderId).hasChild(currentUserId)){
                                                 followsreference.child(model.uploaderId).child(currentUserId).removeValue(); //User already follows the trainer so they could not again
-                                                Toast.makeText(getActivity(), "Removed from Follow List", Toast.LENGTH_SHORT).show();
                                                 followChecker = false;
                                             }else{
-                                                followsreference.child(model.uploaderId).child(currentUserId).setValue(true);//user follows a particular trainer only at once
-                                                Toast.makeText(getActivity(), "Added to Follow List", Toast.LENGTH_SHORT).show();
+                                                followsreference.child(model.uploaderId).child(currentUserId).setValue(true); //user follows a particular trainer only at once
                                                 followChecker = false;
                                             }
                                         });
@@ -196,7 +197,6 @@ public class HomeFragment extends Fragment{
                                 }
                             });
                         });
-
                         videoHolder.comment.setOnClickListener(v -> {
 
                             HomeFragmentDirections.ActionHomeFragmentToCommentFragment dir = HomeFragmentDirections.actionHomeFragmentToCommentFragment(postkey);
@@ -211,31 +211,37 @@ public class HomeFragment extends Fragment{
     }
 
     private void showDeleteDialogName(String title) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Delete");
-        builder.setMessage("Are you sure you want to delete this video?");
-        builder.setPositiveButton("Yes", (dialog, which) -> {
-            Query query = reference.orderByChild("title").equalTo(title);
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for (DataSnapshot dataSnapshot1 : snapshot.getChildren()) {
-                        dataSnapshot1.getRef().removeValue();
+        auth = FirebaseAuth.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Delete");
+            builder.setMessage("Are you sure you want to delete this video?");
+            builder.setPositiveButton("Yes", (dialog, which) -> {
+
+                Query query = reference.orderByChild("title").equalTo(title);
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot dataSnapshot1 : snapshot.getChildren()) {
+                            dataSnapshot1.getRef().removeValue();
+                        }
+                        Toast.makeText(getActivity(), "Video Deleted", Toast.LENGTH_SHORT).show();
                     }
-                    Toast.makeText(getActivity(), "Video Deleted", Toast.LENGTH_SHORT).show();
-                }
-                @Override
-                public void onCancelled(@NonNull  DatabaseError error) {
-                    Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
-                }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                    }
+                });
             });
-        });
-        builder.setNegativeButton("No", (dialog, which) -> {
-            dialog.dismiss();
-        });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-    }
+            builder.setNegativeButton("No", (dialog, which) -> {
+                dialog.dismiss();
+            });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        }
+
 
     @Override
     public void onCreateOptionsMenu(@NonNull  Menu menu, @NonNull  MenuInflater inflater) {
@@ -263,9 +269,6 @@ public class HomeFragment extends Fragment{
 
     private void processSearch(String query) {
         //Code does not run due to the missing of FirebaseRecyclerOptions
-
+        
     }
-
-
-
 }

@@ -52,7 +52,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.MyViewHo
             cname.setText(commentModel.getUsername()); //(it runs)
             cmsg.setText(commentModel.getUsermsg());
             cdate_time.setText("Date :"+commentModel.getDate()+" Time :"+commentModel.getTime());
-            Glide.with(ctx).load(commentModel.getImageUrl()).into(cimage); //(it runs)
+            Glide.with(ctx).load(commentModel.getImageUrl())
+                    .centerCrop().centerCrop().placeholder(R.drawable.ic_baseline_account_circle_24).into(cimage); //(it runs)
         }
     }
 }
