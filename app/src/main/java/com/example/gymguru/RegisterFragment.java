@@ -43,6 +43,7 @@ public class RegisterFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         bind = FragmentRegisterBinding.bind(view);
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         //code for animation
         registerLogoAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_down);
@@ -54,12 +55,12 @@ public class RegisterFragment extends Fragment {
         bind.userSwch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if(isChecked){
                 Toast.makeText(getActivity(), "Gym Trainer", Toast.LENGTH_SHORT).show();
-                bind.editExperience.setVisibility(View.VISIBLE);
-                bind.channelName.setVisibility(View.VISIBLE);
+                bind.trainerPro.setVisibility(View.VISIBLE);
+                bind.trainerChannel.setVisibility(View.VISIBLE);
             }else{
                 Toast.makeText(getActivity(), "Viewer", Toast.LENGTH_SHORT).show();
-                bind.editExperience.setVisibility(View.GONE);
-                bind.channelName.setVisibility(View.GONE);
+                bind.trainerPro.setVisibility(View.GONE);
+                bind.trainerChannel.setVisibility(View.GONE);
             }
         });
 

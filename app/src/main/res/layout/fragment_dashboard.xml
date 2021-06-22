@@ -126,12 +126,12 @@
                     android:id="@+id/homeImg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_home" />
+                    android:src="@drawable/trainer_video_player" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Home"
+                    android:text="Trainer Videos"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
 

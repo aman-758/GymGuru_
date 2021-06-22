@@ -92,7 +92,7 @@ public class VideoHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    // This is the function where i control all the function of row.xml
+    // This is the function where i control all the object of row.xml
     public void initui(Context ctx, UploadMember model, int position, String videoId, FragmentManager fm){
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         auth = FirebaseAuth.getInstance();
@@ -135,7 +135,8 @@ public class VideoHolder extends RecyclerView.ViewHolder {
         });
         //Comment
         comment = mView.findViewById(R.id.comment_img); //Here i passing through the reference further for recycler view
-        //Fetching trainer details on the video
+
+        //Fetching trainer details on the video section
         channelName = mView.findViewById(R.id.channelName);
         channelImg = mView.findViewById(R.id.channelImg);
 
@@ -271,7 +272,6 @@ public class VideoHolder extends RecyclerView.ViewHolder {
 
             //Initialize load control
             //Initialize bandwidth meter already initialized
-
             //Track selector already initialized
 
         } catch (Exception e){

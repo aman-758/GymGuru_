@@ -143,6 +143,10 @@ public class EditProfileFragment extends Fragment {
                     else{
                         bind.fireSwitch.setChecked(false);
                         bind.fireSwitch.setText(userType);
+                        bind.editChannel.setVisibility(View.GONE);
+                        bind.fireExperience.setVisibility(View.GONE);
+                        bind.editTextChannel.setVisibility(View.GONE);
+                        bind.editTextProfession.setVisibility(View.GONE);
                     }
 
                 }

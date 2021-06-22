@@ -212,6 +212,7 @@ public class HomeFragment extends Fragment{
 
     private void showDeleteDialogName(String title) {
         auth = FirebaseAuth.getInstance();
+        auth.getUid();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -219,21 +220,27 @@ public class HomeFragment extends Fragment{
             builder.setMessage("Are you sure you want to delete this video?");
             builder.setPositiveButton("Yes", (dialog, which) -> {
 
-                Query query = reference.orderByChild("title").equalTo(title);
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot dataSnapshot1 : snapshot.getChildren()) {
-                            dataSnapshot1.getRef().removeValue();
+                    Query query = reference.orderByChild("title").equalTo(title);
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot dataSnapshot1 : snapshot.getChildren()) {
+                                UploadMember model = dataSnapshot1.getValue(UploadMember.class);
+                                if (auth.getCurrentUser().getUid().equals(model.getUploaderId())) {
+                                    dataSnapshot1.getRef().removeValue();
+                                    Toast.makeText(getActivity(), "Video Deleted", Toast.LENGTH_SHORT).show();
+                                }else{
+                                    Toast.makeText(getActivity(), "You can't delete another trainer videos", Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
+                                }
+                            }
                         }
-                        Toast.makeText(getActivity(), "Video Deleted", Toast.LENGTH_SHORT).show();
-                    }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
-                    }
-                });
             });
             builder.setNegativeButton("No", (dialog, which) -> {
                 dialog.dismiss();
