@@ -76,13 +76,18 @@ public class DashboardFragment extends Fragment {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     FirebaseDatabase.getInstance().getReference("Users").child(auth.getCurrentUser().getUid()).child("imageUrl").get().addOnSuccessListener(dataSnapshot -> {
                         try {
-                            String url = dataSnapshot.getValue().toString();
-                            Glide.with(getActivity()).load(url).centerCrop().placeholder(R.drawable.ic_baseline_account_circle_24).into(bind.dpImg);
-                            Log.d("imageUrl", url);
-
+                            if(auth.getCurrentUser().getUid()!=null) {
+                                String url = dataSnapshot.getValue().toString();
+                                Glide.with(getActivity()).load(url).centerCrop().placeholder(R.drawable.ic_baseline_account_circle_24).into(bind.dpImg);
+                                Log.d("imageUrl", url);
+                            }else {
+                                Snackbar.make(bind.getRoot(),"Database error!",BaseTransientBottomBar.LENGTH_LONG).show();
+                            }
                         } catch (Exception e) {
-                            //Snackbar.make(bind.getRoot(),e.getMessage(),BaseTransientBottomBar.LENGTH_LONG).show();
+                            Snackbar.make(bind.getRoot(),e.getMessage(),BaseTransientBottomBar.LENGTH_LONG).show();
                         }
+                    }).addOnFailureListener(e -> {
+                        Snackbar.make(bind.getRoot(),e.getMessage(),BaseTransientBottomBar.LENGTH_LONG).show();
                     });
                 }
 
@@ -94,11 +99,12 @@ public class DashboardFragment extends Fragment {
 
             bind.greet.setText(auth.getCurrentUser().getDisplayName());
             bind.cardLogout.setOnClickListener(v -> {
-                auth.signOut();
-                NavHostFragment.findNavController(this).navigateUp();
-            });
-            bind.cardLive.setOnClickListener(v -> {
-                //
+                if(auth.getCurrentUser()!=null) {
+                    auth.signOut();
+                    NavHostFragment.findNavController(this).navigateUp();
+                }else{
+                    Toast.makeText(getActivity(),"Please wait!",Toast.LENGTH_LONG).show();
+                }
             });
             bind.userProfileCard.setOnClickListener(view1 -> {
                 NavHostFragment.findNavController(DashboardFragment.this).navigate(R.id.action_dashboardFragment_to_profileFragment);
@@ -131,7 +137,6 @@ public class DashboardFragment extends Fragment {
                     RegistrationModel registrationModel = snapshot.getValue(RegistrationModel.class);
                     if(registrationModel != null){
                         String username = registrationModel.username;
-
                         bind.greet.setText(username);
                     }
                 }

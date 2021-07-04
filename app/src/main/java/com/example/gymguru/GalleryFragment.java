@@ -73,8 +73,5 @@ public class GalleryFragment extends Fragment {
         }).addOnFailureListener(e -> {
             Snackbar.make(bind.getRoot(), e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
         });
-        bind.recyclerViewImg.setOnClickListener(v -> {
-
-        });
     }
 }

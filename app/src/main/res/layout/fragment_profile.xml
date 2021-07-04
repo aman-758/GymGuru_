@@ -108,6 +108,7 @@
         app:layout_constraintTop_toBottomOf="@+id/cardView3">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/storage"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -151,6 +152,7 @@
         app:layout_constraintTop_toBottomOf="@+id/cardView4">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/notification"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -192,6 +194,7 @@
         app:layout_constraintTop_toBottomOf="@+id/cardView5">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/watchHistory"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -236,6 +239,7 @@
         app:layout_constraintTop_toBottomOf="@+id/cardView6">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/downloadCard"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -278,6 +282,7 @@
         app:layout_constraintTop_toBottomOf="@+id/cardView7">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/watchLater"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 

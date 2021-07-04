@@ -38,7 +38,7 @@ public class SplashFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         bind = FragmentSplashBinding.bind(view);
 
-        // code  for animaton
+        // code  for animation
 
         sidelogoanim = AnimationUtils.loadAnimation( getActivity() ,R.anim.sidelogo_anim) ;
         sidetextanim= AnimationUtils.loadAnimation( getActivity() ,R.anim.sidetext_anim);

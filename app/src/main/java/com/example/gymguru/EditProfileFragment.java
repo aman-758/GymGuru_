@@ -168,19 +168,43 @@ public class EditProfileFragment extends Fragment {
                     String experience = bind.fireExperience.getText().toString();
                     String channelName = bind.editChannel.getText().toString();
                     String age = bind.fireAge.getText().toString();
-                    if(registrationModel.userType.equals("Gym Trainer")) {
+                    if(registrationModel.userType.equals("Gym Trainer")&&!channelName.isEmpty()&&!name.isEmpty()
+                    &&!experience.isEmpty()&&!age.isEmpty()) {
                         updateData(name, experience, age, channelName);
                         bind.progressBar.setVisibility(View.VISIBLE);
-                    }else{
+                    }else if(registrationModel.userType.equals("Viewer")&&!name.isEmpty()&&!age.isEmpty()){
                         updateData(name,age);
                         bind.progressBar.setVisibility(View.VISIBLE);
                     }
-
+                    if(channelName.isEmpty()){
+                        bind.editChannel.setError("Channel name cannot be empty!");
+                        bind.editChannel.requestFocus();
+                        bind.progressBar.setVisibility(View.GONE);
+                        return;
+                    }
+                    if(name.isEmpty()){
+                        bind.fireName.setError("Name must be provided!");
+                        bind.fireName.requestFocus();
+                        bind.progressBar.setVisibility(View.GONE);
+                        return;
+                    }
+                    if(age.isEmpty()){
+                        bind.fireAge.setError("Age must be provided!");
+                        bind.fireAge.requestFocus();
+                        bind.progressBar.setVisibility(View.GONE);
+                        return;
+                    }
+                    if(experience.isEmpty()){
+                        bind.fireExperience.setError("Profession is mandatory!");
+                        bind.fireExperience.requestFocus();
+                        bind.progressBar.setVisibility(View.GONE);
+                        return;
+                    }
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-
+                    Snackbar.make(bind.getRoot(),error.getMessage(),BaseTransientBottomBar.LENGTH_LONG).show();
                 }
             });
 
@@ -204,34 +228,34 @@ public class EditProfileFragment extends Fragment {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //This is the function of update user's data
 
-    private void updateData(String name, String experience, String age, String channelName/*String email /*Boolean userType*/) {
-        // Now creating hashmap to update the data
-        HashMap User = new HashMap();
-        User.put("username", name);
-        User.put("experience", experience);
-        User.put("channelName",channelName);
-        User.put("age", age);
+    private void updateData(String name, String experience, String age, String channelName) {
 
-        reference = FirebaseDatabase.getInstance().getReference("Users");
-        // Now update the child of the Users
+            // Now creating hashmap to update the data
+            HashMap User = new HashMap();
+            User.put("username", name);
+            User.put("experience", experience);
+            User.put("channelName", channelName);
+            User.put("age", age);
 
-        reference.child(userId).updateChildren(User).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                bind.fireName.setText(name);
-                bind.fireExperience.setText(experience);
-                bind.fireAge.setText(age);
-                bind.editChannel.setText(channelName);
-                //bind.fireEmail.setText(email);
-                Snackbar.make(bind.getRoot(), "Data successfully updated", BaseTransientBottomBar.LENGTH_LONG).show();
+            reference = FirebaseDatabase.getInstance().getReference("Users");
+            // Now update the child of the Users
+
+            reference.child(userId).updateChildren(User).addOnCompleteListener(task -> {
+                if(task.isSuccessful()){
+                    bind.fireName.setText(name);
+                    bind.fireAge.setText(age);
+                    bind.fireExperience.setText(experience);
+                    bind.editChannel.setText(channelName);
+                    Snackbar.make(bind.getRoot(), "Data successfully updated", BaseTransientBottomBar.LENGTH_LONG).show();
+                    bind.progressBar.setVisibility(View.GONE);
+                }
+            }).addOnFailureListener(e -> {
+                Snackbar.make(bind.getRoot(),e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
                 bind.progressBar.setVisibility(View.GONE);
-            } else {
-                Snackbar.make(bind.getRoot(), "Failed to update", BaseTransientBottomBar.LENGTH_LONG).show();
-                bind.progressBar.setVisibility(View.GONE);
-            }
+            });
 
-        });
+        }
 
-    }
 
     private void updateData(String name, String age) {
         // Now creating hashmap to update the data

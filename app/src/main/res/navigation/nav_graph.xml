@@ -140,5 +140,8 @@
         <argument
             android:name="uid"
             app:argType="string" />
+        <action
+            android:id="@+id/action_trainerVideos_to_commentFragment"
+            app:destination="@id/commentFragment" />
     </fragment>
 </navigation>

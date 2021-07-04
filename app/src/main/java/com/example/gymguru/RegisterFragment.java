@@ -183,6 +183,7 @@ public class RegisterFragment extends Fragment {
                         } else {
                             bind.channelName.setError("Channel Name must be provided!");
                             bind.channelName.requestFocus();
+                            updateUserProfile(null);
                             bind.progReg.setVisibility(View.GONE);
                         }
                     } else {
@@ -229,7 +230,7 @@ public class RegisterFragment extends Fragment {
                 bind.progReg.setVisibility(View.GONE);
             });
         }else{
-            Snackbar.make(bind.getRoot(),"Details Invalid!",BaseTransientBottomBar.LENGTH_LONG).show();
+            Snackbar.make(bind.getRoot(),"Someone already have an account with this Email ID!",BaseTransientBottomBar.LENGTH_LONG).show();
         }
     }
 

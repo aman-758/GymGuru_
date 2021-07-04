@@ -31,6 +31,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.MyViewHo
     public void onBindViewHolder(MyViewHolder viewHolder, int position) {
         RegistrationModel registrationModel = trainers.get(position);
         viewHolder.bind(registrationModel, position);
+
     }
 
     @Override
@@ -60,16 +61,15 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.MyViewHo
             itemView.setOnClickListener(v -> {
                 int adapterPosition = getAdapterPosition();
                 RegistrationModel registrationModel = trainers.get(adapterPosition);
-                //HomeFragmentDirections.ActionHomeFragmentToCommentFragment dir = HomeFragmentDirections.actionHomeFragmentToCommentFragment();
-                //NavHostFragment.findNavController(fragment).navigate(dir);
-
                 GalleryFragmentDirections.ActionGalleryFragmentToTrainerVideos dir = GalleryFragmentDirections.actionGalleryFragmentToTrainerVideos(registrationModel.uid);
                 NavHostFragment.findNavController(fragment).navigate(dir);
+
             });
         }
 
         public void bind(RegistrationModel registrationModel, int position) {
             trainer.setText(registrationModel.getChannelName());
+
             Glide.with(ctx).load(registrationModel.getImageUrl())
                     .fitCenter().centerCrop().placeholder(R.drawable.ic_baseline_account_circle_24).into(img);
         }

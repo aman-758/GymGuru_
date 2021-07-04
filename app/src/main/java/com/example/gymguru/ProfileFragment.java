@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -84,7 +85,20 @@ public class ProfileFragment extends Fragment {
         bind.editProfile.setOnClickListener(v -> {
             NavHostFragment.findNavController(ProfileFragment.this).navigate(R.id.action_profileFragment_to_editProfileFragment);
         });
-        
-
+        bind.storage.setOnClickListener(v -> {
+            Toast.makeText(getActivity(), "This feature under construction!", Toast.LENGTH_SHORT).show();
+        });
+        bind.notification.setOnClickListener(v -> {
+            Toast.makeText(getActivity(), "This feature under construction!", Toast.LENGTH_SHORT).show();
+        });
+        bind.watchHistory.setOnClickListener(v -> {
+            Toast.makeText(getActivity(), "This feature under construction!", Toast.LENGTH_SHORT).show();
+        });
+        bind.downloadCard.setOnClickListener(v -> {
+            Toast.makeText(getActivity(), "This feature under construction!", Toast.LENGTH_SHORT).show();
+        });
+        bind.watchLater.setOnClickListener(v -> {
+            Toast.makeText(getActivity(), "This feature under construction!", Toast.LENGTH_SHORT).show();
+        });
     }
 }

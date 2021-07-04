@@ -49,6 +49,7 @@ public class LoginFragment extends Fragment {
         bind.loginFace.setAnimation(loginFace);
         bind.showAnim1.setAnimation(showAnim1);
 
+
         bind.btnLogin.setOnClickListener(v -> {
 
             String email = bind.editEmail.getText().toString();
@@ -112,4 +113,5 @@ public class LoginFragment extends Fragment {
         }else {
         }
     }
+
 }

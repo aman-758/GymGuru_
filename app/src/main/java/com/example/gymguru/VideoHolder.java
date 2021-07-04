@@ -153,7 +153,7 @@ public class VideoHolder extends RecyclerView.ViewHolder {
             }
 
         }).addOnFailureListener(e -> {
-            //Handle the error
+            Snackbar.make(mView.getRootView(),e.getMessage(),BaseTransientBottomBar.LENGTH_LONG).show();
         });
         //Download Function
         download = mView.findViewById(R.id.btnDownload);
@@ -182,7 +182,7 @@ public class VideoHolder extends RecyclerView.ViewHolder {
 
 
     @SuppressLint("ResourceType")
-    public void setVideo(final Application ctx, UploadMember model, /*RegistrationModel registrationModel,*/ int position){
+    public void setVideo(final Application ctx, UploadMember model, int position){
         TextView mTextView = mView.findViewById(R.id.titletv);
         timeText = mView.findViewById(R.id.textTime);
         mExoplayerView = mView.findViewById(R.id.exoplayer_view);
@@ -221,9 +221,6 @@ public class VideoHolder extends RecyclerView.ViewHolder {
                 }
 
             });
-
-
-
             exoPlayer.addListener(new Player.EventListener(){
                 @Override
                 public void onTimelineChanged(Timeline timeline, @Nullable  Object manifest, int reason) {
@@ -279,6 +276,7 @@ public class VideoHolder extends RecyclerView.ViewHolder {
         }
     }
 
+
     //For deleting the video
     private VideoHolder.Clicklistener mClickListener;
     public interface Clicklistener{
@@ -291,7 +289,9 @@ public class VideoHolder extends RecyclerView.ViewHolder {
 
     public boolean isPlaying(ExoPlayer exoPlayer) {
         return exoPlayer.getPlaybackState() == Player.STATE_READY && exoPlayer.getPlayWhenReady();
+
     }
+
 
     // Like Functionality
     public void setLikesButtonStatus(String postkey) {
@@ -354,6 +354,8 @@ public class VideoHolder extends RecyclerView.ViewHolder {
             }
         });
     }
+
+    //follow functionality
 
     public void setFollowButtonStatus(String postkey) {
         followButton = mView.findViewById(R.id.btnFollow);
