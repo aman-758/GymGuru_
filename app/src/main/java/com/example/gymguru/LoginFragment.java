@@ -60,7 +60,7 @@ public class LoginFragment extends Fragment {
                 inputManager.hideSoftInputFromWindow(view.getWindowToken(),
                         InputMethodManager.HIDE_NOT_ALWAYS);
             }
-            if(email.length() > 10)
+            if(email.length() >= 10)
             {
                 if(password.length() >= 8)
                 {

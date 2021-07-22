@@ -1,12 +1,15 @@
 package com.example.gymguru;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -39,6 +42,7 @@ public class RegisterFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_register, container, false);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -64,6 +68,8 @@ public class RegisterFragment extends Fragment {
             }
         });
 
+
+
         bind.btnReg.setOnClickListener(v -> {
 
             String username = bind.editName.getText().toString();
@@ -75,7 +81,14 @@ public class RegisterFragment extends Fragment {
             String channelName = bind.channelName.getText().toString();
             String genderType = "";
             String userType = "Viewer";
+
             bind.progReg.setVisibility(View.VISIBLE);
+            InputMethodManager inputMethodManager = (InputMethodManager)
+                    getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if(inputMethodManager!=null){
+                inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),
+                        inputMethodManager.HIDE_NOT_ALWAYS);
+            }
             if (bind.radioMale.isChecked()) {
                 genderType = "Male";
             }
@@ -85,6 +98,21 @@ public class RegisterFragment extends Fragment {
             if (bind.userSwch.isChecked()) {
                 userType = "Gym Trainer";
 
+            }
+
+            int checkedId;
+            checkedId = bind.radioGender.getCheckedRadioButtonId();
+            {
+                if(checkedId == -1){
+                    //Means no radio buttons are checked
+                    bind.radioError.setText("Please select Gender!");
+                    bind.radioError.requestFocus();
+                    bind.radioError.setVisibility(View.VISIBLE);
+                    bind.progReg.setVisibility(View.GONE);
+                } else{
+                    bind.radioError.setVisibility(View.GONE);
+
+                }
             }
 
             if(userType.equals("Gym Trainer")) {
@@ -99,8 +127,9 @@ public class RegisterFragment extends Fragment {
         if (!username.trim().isEmpty()) {
             if (!age.trim().isEmpty() && age.length() <= 2) {
                 if (email.length() >= 10) {
-                        if (password.length() >= 8) {
-                            if (cPass.equals(password)) {
+                    if (password.length() >= 8) {
+                        if (cPass.equals(password)) {
+                            if(!genderType.isEmpty()) {
                                 String finalUserType = userType;
                                 String finalGenderType = genderType;
                                 auth.createUserWithEmailAndPassword(email, password)
@@ -108,24 +137,31 @@ public class RegisterFragment extends Fragment {
                                             String uid = authResult.getUser().getUid();
                                             RegistrationModel registrationModel = new RegistrationModel(uid, username, age, email, "", "", finalGenderType, finalUserType, "");
                                             updateUserProfile(registrationModel);
-                                            })
+                                        })
                                         .addOnFailureListener(e -> {
                                             Snackbar.make(bind.getRoot(), e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
                                             updateUserProfile(null);
                                             bind.progReg.setVisibility(View.GONE);
                                         });
-                                } else {
-                                    bind.Cpass.setError("Password do not match!");
-                                    bind.Cpass.requestFocus();
-                                    updateUserProfile(null);
-                                    bind.progReg.setVisibility(View.GONE);
-                                }
-                            } else {
-                                bind.editUpass.setError("Invalid Password!");
-                                bind.editUpass.requestFocus();
+                            } /*else{
+                                bind.radioError.setText("Gender cannot be empty!");
+                                bind.radioError.requestFocus();
+                                bind.radioError.setVisibility(View.VISIBLE);
                                 updateUserProfile(null);
                                 bind.progReg.setVisibility(View.GONE);
-                            }
+                            }*/
+                        } else {
+                            bind.Cpass.setError("Password do not match!");
+                            bind.Cpass.requestFocus();
+                            updateUserProfile(null);
+                            bind.progReg.setVisibility(View.GONE);
+                        }
+                    } else {
+                        bind.editUpass.setError("Invalid Password!");
+                        bind.editUpass.requestFocus();
+                        updateUserProfile(null);
+                        bind.progReg.setVisibility(View.GONE);
+                    }
                 } else {
                     bind.editUemail.setError("Invalid Email!");
                     bind.editUemail.requestFocus();
@@ -150,45 +186,55 @@ public class RegisterFragment extends Fragment {
         if (!username.trim().isEmpty()) {
             if (!age.trim().isEmpty() && age.length() <= 2) {
                 if (email.length() >= 10) {
-                    if (!experience.trim().isEmpty()) {
-                        if (!channelName.isEmpty()) {
-                            if (password.length() >= 8) {
-                                if (cPass.equals(password)) {
-                                    String finalUserType = userType;
-                                    String finalGenderType = genderType;
-                                    auth.createUserWithEmailAndPassword(email, password)
-                                            .addOnSuccessListener(authResult -> {
-                                                String uid = authResult.getUser().getUid();
-                                                RegistrationModel registrationModel = new RegistrationModel(uid, username, age, email, experience, channelName, finalGenderType, finalUserType, "");
-                                                updateUserProfile(registrationModel);
-                                            })
-                                            .addOnFailureListener(e -> {
-                                                Snackbar.make(bind.getRoot(), e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
-                                                updateUserProfile(null);
-                                                bind.progReg.setVisibility(View.GONE);
-                                            });
+                    if (password.length() >= 8) {
+                        if (cPass.equals(password)) {
+                            if(!genderType.isEmpty()) {
+                                if (!experience.trim().isEmpty()) {
+                                    if (!channelName.isEmpty()) {
+
+                                        String finalUserType = userType;
+                                        String finalGenderType = genderType;
+                                        auth.createUserWithEmailAndPassword(email, password)
+                                                .addOnSuccessListener(authResult -> {
+                                                    String uid = authResult.getUser().getUid();
+                                                    RegistrationModel registrationModel = new RegistrationModel(uid, username, age, email, experience, channelName, finalGenderType, finalUserType, "");
+                                                    updateUserProfile(registrationModel);
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    Snackbar.make(bind.getRoot(), e.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
+                                                    updateUserProfile(null);
+                                                    bind.progReg.setVisibility(View.GONE);
+                                                });
+                                    }else{
+                                        bind.channelName.setError("Channel name must be provided!");
+                                        bind.channelName.requestFocus();
+                                        updateUserProfile(null);
+                                        bind.progReg.setVisibility(View.GONE);
+
+                                    }
                                 } else {
-                                    bind.Cpass.setError("Password do not match!");
-                                    bind.Cpass.requestFocus();
+                                    bind.editExperience.setError("Profession must be provided!");
+                                    bind.editExperience.requestFocus();
                                     updateUserProfile(null);
                                     bind.progReg.setVisibility(View.GONE);
                                 }
-                            } else {
-                                bind.editUpass.setError("Invalid Password!");
-                                bind.editUpass.requestFocus();
+                            } /*else{
+                                bind.radioError.setText("Gender cannot be empty!");
+                                bind.radioError.requestFocus();
+                                bind.radioError.setVisibility(View.VISIBLE);
                                 updateUserProfile(null);
                                 bind.progReg.setVisibility(View.GONE);
-                            }
+                            }*/
 
                         } else {
-                            bind.channelName.setError("Channel Name must be provided!");
-                            bind.channelName.requestFocus();
+                            bind.Cpass.setError("Password do not match!");
+                            bind.Cpass.requestFocus();
                             updateUserProfile(null);
                             bind.progReg.setVisibility(View.GONE);
                         }
                     } else {
-                        bind.editExperience.setError("Profession must be provided!");
-                        bind.editExperience.requestFocus();
+                        bind.editUpass.setError("Invalid password!");
+                        bind.editUpass.requestFocus();
                         updateUserProfile(null);
                         bind.progReg.setVisibility(View.GONE);
                     }
@@ -210,6 +256,7 @@ public class RegisterFragment extends Fragment {
             updateUserProfile(null);
             bind.progReg.setVisibility(View.GONE);
         }
+
     }
 
     private void showError(String message) {
@@ -229,8 +276,6 @@ public class RegisterFragment extends Fragment {
                 showError(e.getMessage());
                 bind.progReg.setVisibility(View.GONE);
             });
-        }else{
-            Snackbar.make(bind.getRoot(),"Someone already have an account with this Email ID!",BaseTransientBottomBar.LENGTH_LONG).show();
         }
     }
 

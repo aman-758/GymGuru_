@@ -84,7 +84,7 @@ public class DashboardFragment extends Fragment {
                                 Snackbar.make(bind.getRoot(),"Database error!",BaseTransientBottomBar.LENGTH_LONG).show();
                             }
                         } catch (Exception e) {
-                            Snackbar.make(bind.getRoot(),e.getMessage(),BaseTransientBottomBar.LENGTH_LONG).show();
+                            //Snackbar.make(bind.getRoot(),"Something went wrong",BaseTransientBottomBar.LENGTH_LONG).show();
                         }
                     }).addOnFailureListener(e -> {
                         Snackbar.make(bind.getRoot(),e.getMessage(),BaseTransientBottomBar.LENGTH_LONG).show();

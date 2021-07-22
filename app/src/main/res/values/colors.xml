@@ -9,4 +9,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name = "accent">#ff5c8d</color>
+    <color name = "whatsappcolor">#075e54</color>
+    <color name = "whatsappcolor2">#128c7e</color>
+    <color name = "whatsappcolor3">#25d366</color>
+    <color name = "whatsappcolor4">#dcf8c6</color>
+    <color name = "whatsappcolor5">#34b7f1</color>
+    <color name = "whatsappcolor6">#ece5dd</color>
 </resources>

@@ -110,7 +110,6 @@ public class HomeFragment extends Fragment {
                             public void onItemClick(View view, int position) {
                                 //
                             }
-
                             @Override
                             public void onItemLongClick(View view, int position) {
                                 title = getItem(position).getTitle();
@@ -395,6 +394,7 @@ public class HomeFragment extends Fragment {
         inflater.inflate(R.menu.search_menu,menu);
         MenuItem item = menu.findItem(R.id.search_firebase);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setQueryHint("Search video here...");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

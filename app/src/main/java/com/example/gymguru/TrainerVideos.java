@@ -83,6 +83,7 @@ public class TrainerVideos extends Fragment {
 
         FirebaseRecyclerAdapter<UploadMember, TrainerHolder> firebaseRecyclerAdapter =
                 new FirebaseRecyclerAdapter<UploadMember, TrainerHolder>(options) {
+
                     @NonNull
                     @Override
                     public TrainerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -112,6 +113,7 @@ public class TrainerVideos extends Fragment {
             super.onStart();
             FirebaseRecyclerAdapter<UploadMember, TrainerHolder> firebaseRecyclerAdapter =
                     new FirebaseRecyclerAdapter<UploadMember, TrainerHolder>(options) {
+
                         @NonNull
                         @Override
                         public TrainerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -132,8 +134,7 @@ public class TrainerVideos extends Fragment {
 
     //Enable options menu in this fragment
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-            setHasOptionsMenu(true);
+    public void onCreate(@Nullable Bundle savedInstanceState) { setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
 
     }
