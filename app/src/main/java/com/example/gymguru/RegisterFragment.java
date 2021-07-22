@@ -108,6 +108,7 @@ public class RegisterFragment extends Fragment {
                     bind.radioError.setText("Please select Gender!");
                     bind.radioError.requestFocus();
                     bind.radioError.setVisibility(View.VISIBLE);
+                    updateUserProfile(null);
                     bind.progReg.setVisibility(View.GONE);
                 } else{
                     bind.radioError.setVisibility(View.GONE);
